@@ -30,7 +30,8 @@ public class Login extends javax.swing.JFrame {
     // We use GridBagLayout because it is the "magnet" for the center.
     javax.swing.JPanel wrapper = new javax.swing.JPanel(new java.awt.GridBagLayout());
     
-
+    // Use the light gray color seen in your design
+    wrapper.setBackground(new java.awt.Color(230, 230, 230)); 
 
     // 3. Swap the layouts
     getContentPane().removeAll();

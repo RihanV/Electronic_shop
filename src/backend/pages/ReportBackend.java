@@ -49,18 +49,15 @@ public class ReportBackend {
   }
 
   public List<Object[]> profitReport() throws SQLException {
-    String sqlPid = "SELECT p.product_id, p.name, SUM((ii.unit_price - p.cost_price) * ii.quantity) AS profit " +
-        "FROM invoice_items ii JOIN products p ON p.product_id = ii.product_id " +
-        "GROUP BY p.product_id, p.name ORDER BY profit DESC";
-    String sqlId = "SELECT p.id, p.name, SUM((ii.unit_price - p.cost_price) * ii.quantity) AS profit " +
-        "FROM invoice_items ii JOIN products p ON p.id = ii.product_id " +
-        "GROUP BY p.id, p.name ORDER BY profit DESC";
     try (Connection con = DB.getConnection()) {
-      try {
-        return runProfit(con, sqlPid);
-      } catch (SQLException ex) {
-        return runProfit(con, sqlId);
-      }
+      String productIdCol = hasColumn(con, "products", "product_id") ? "product_id" : "id";
+      boolean hasCostPrice = hasColumn(con, "products", "cost_price");
+      String costExpr = hasCostPrice ? "p.cost_price" : "0";
+      String sql = "SELECT p." + productIdCol + ", p.name, " +
+          "SUM((ii.unit_price - " + costExpr + ") * ii.quantity) AS profit " +
+          "FROM invoice_items ii JOIN products p ON p." + productIdCol + " = ii.product_id " +
+          "GROUP BY p." + productIdCol + ", p.name ORDER BY profit DESC";
+      return runProfit(con, sql);
     }
   }
 
@@ -71,6 +68,16 @@ public class ReportBackend {
         out.add(new Object[] { rs.getInt(1), rs.getString("name"), rs.getDouble("profit") });
       }
       return out;
+    }
+  }
+
+  private boolean hasColumn(Connection con, String table, String column) throws SQLException {
+    DatabaseMetaData meta = con.getMetaData();
+    try (ResultSet rs = meta.getColumns(con.getCatalog(), null, table, column)) {
+      if (rs.next()) return true;
+    }
+    try (ResultSet rs = meta.getColumns(con.getCatalog(), null, table.toUpperCase(), column.toUpperCase())) {
+      return rs.next();
     }
   }
 }
