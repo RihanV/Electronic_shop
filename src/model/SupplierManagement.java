@@ -17,29 +17,71 @@ public class SupplierManagement extends javax.swing.JFrame {
      */
    public SupplierManagement() {
     initComponents();
-    centerContentPanel();
+    applyFullScreenLayout();
+    setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 }
 
-    private void centerContentPanel() {
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+    private void applyFullScreenLayout() {
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
+        jPanel2.removeAll();
+        jPanel2.setLayout(new java.awt.BorderLayout());
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
+
+        applyButtonStyles();
+
+        javax.swing.JPanel titlePanel = new javax.swing.JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.Y_AXIS));
+        titlePanel.add(jLabel3);
+        titlePanel.add(javax.swing.Box.createVerticalStrut(4));
+        titlePanel.add(jLabel1);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 28, 12, 28));
+        topPanel.add(titlePanel, java.awt.BorderLayout.WEST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        centerPanel.setOpaque(false);
         java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.anchor = java.awt.GridBagConstraints.CENTER;
-        gbc.fill = java.awt.GridBagConstraints.NONE;
+        gbc.insets = new java.awt.Insets(12, 12, 12, 12);
+        centerPanel.add(jButton1, gbc);
+        gbc.gridy++;
+        centerPanel.add(jButton2, gbc);
 
-        javax.swing.JPanel wrapper = new javax.swing.JPanel(new java.awt.GridBagLayout());
-        wrapper.setBackground(new java.awt.Color(0, 0, 0));
-        wrapper.add(jPanel2, gbc);
+        javax.swing.JPanel bottomPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 28, 24, 28));
+        javax.swing.JPanel backPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 0));
+        backPanel.setOpaque(false);
+        backPanel.add(jButton3);
+        bottomPanel.add(backPanel, java.awt.BorderLayout.EAST);
 
-        getContentPane().removeAll();
-        getContentPane().setLayout(new java.awt.BorderLayout());
-        getContentPane().add(wrapper, java.awt.BorderLayout.CENTER);
+        jPanel2.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanel2.add(centerPanel, java.awt.BorderLayout.CENTER);
+        jPanel2.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+
         revalidate();
         repaint();
+    }
+
+    private void applyButtonStyles() {
+        jButton1.setBackground(new java.awt.Color(102, 153, 255));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButton2.setBackground(new java.awt.Color(0, 153, 102));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButton3.setBackground(new java.awt.Color(255, 51, 51));
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setPreferredSize(new java.awt.Dimension(90, 27));
     }
     /**
      * This method is called from within the constructor to initialize the form.

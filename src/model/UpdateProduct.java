@@ -35,7 +35,7 @@ public class UpdateProduct extends javax.swing.JFrame {
 
     // Re-initialize your listeners and data loading
     jButton1.addActionListener(e -> {
-        new Dashboard().setVisible(true);
+        new ProductManagement().setVisible(true);
         dispose();
     });
 
@@ -444,7 +444,7 @@ public class UpdateProduct extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        new Dashboard().setVisible(true);
+        new ProductManagement().setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

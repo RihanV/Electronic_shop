@@ -34,7 +34,7 @@ public class AddProduct extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
     jButton1.addActionListener(e -> {
-        new Dashboard().setVisible(true);
+        new ProductManagement().setVisible(true);
         dispose();
     });
 

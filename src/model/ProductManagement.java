@@ -1,123 +1,229 @@
 /*
- * ProductManagement.java
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package model;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+/**
+ *
+ * @author User
+ */
 public class ProductManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProductManagement.class.getName());
 
+    /**
+     * Creates new form ProductManagement
+     */
     public ProductManagement() {
-        initUi();
+        initComponents();
+        applyFullScreenLayout();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-    }
 
-    private void initUi() {
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        JPanel root = new JPanel(new java.awt.BorderLayout());
-        root.setBackground(new Color(0, 0, 0));
-        setContentPane(root);
-
-        JLabel title = new JLabel("Product Management");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        title.setForeground(Color.WHITE);
-
-        JLabel subtitle = new JLabel("Add, update, or delete products.");
-        subtitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        subtitle.setForeground(Color.WHITE);
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.setOpaque(false);
-        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.Y_AXIS));
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(24, 28, 12, 28));
-        titlePanel.add(title);
-        titlePanel.add(javax.swing.Box.createVerticalStrut(4));
-        titlePanel.add(subtitle);
-
-        JButton addButton = createPrimaryButton("Add Product");
-        JButton updateButton = createPrimaryButton("Update Product");
-        JButton deleteButton = createDangerButton("Delete Product");
-        JButton backButton = createDangerButton("Back");
-        backButton.setPreferredSize(new Dimension(90, 27));
-
-        addButton.addActionListener(e -> {
+        jButtonAdd.addActionListener(e -> {
             new AddProduct().setVisible(true);
             dispose();
         });
-        updateButton.addActionListener(e -> {
+        jButtonUpdate.addActionListener(e -> {
             new UpdateProduct().setVisible(true);
             dispose();
         });
-        deleteButton.addActionListener(e -> {
+        jButtonDelete.addActionListener(e -> {
             new DeleteItem().setVisible(true);
             dispose();
         });
-        backButton.addActionListener(e -> {
+        jButtonBack.addActionListener(e -> {
             new Dashboard().setVisible(true);
             dispose();
         });
+    }
 
-        JPanel centerPanel = new JPanel(new GridBagLayout());
+    private void applyFullScreenLayout() {
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+
+        jPanel1.removeAll();
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        applyButtonStyles();
+
+        javax.swing.JPanel titlePanel = new javax.swing.JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.Y_AXIS));
+        titlePanel.add(jLabel1);
+        titlePanel.add(javax.swing.Box.createVerticalStrut(4));
+        titlePanel.add(jLabel2);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 28, 12, 28));
+        topPanel.add(titlePanel, java.awt.BorderLayout.WEST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.GridBagLayout());
         centerPanel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(12, 12, 12, 12);
-        centerPanel.add(addButton, gbc);
+        gbc.insets = new java.awt.Insets(12, 12, 12, 12);
+        centerPanel.add(jButtonAdd, gbc);
         gbc.gridy++;
-        centerPanel.add(updateButton, gbc);
+        centerPanel.add(jButtonUpdate, gbc);
         gbc.gridy++;
-        centerPanel.add(deleteButton, gbc);
+        centerPanel.add(jButtonDelete, gbc);
 
-        JPanel bottomPanel = new JPanel(new java.awt.BorderLayout());
+        javax.swing.JPanel bottomPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
         bottomPanel.setOpaque(false);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(12, 28, 24, 28));
-        JPanel backPanel = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 0));
+        bottomPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 28, 24, 28));
+        javax.swing.JPanel backPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 0));
         backPanel.setOpaque(false);
-        backPanel.add(backButton);
+        backPanel.add(jButtonBack);
         bottomPanel.add(backPanel, java.awt.BorderLayout.EAST);
 
-        root.add(titlePanel, java.awt.BorderLayout.NORTH);
-        root.add(centerPanel, java.awt.BorderLayout.CENTER);
-        root.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+        jPanel1.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanel1.add(centerPanel, java.awt.BorderLayout.CENTER);
+        jPanel1.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
+    }
+
+    private void applyButtonStyles() {
+        jButtonAdd.setBackground(new java.awt.Color(102, 153, 255));
+        jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonAdd.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButtonUpdate.setBackground(new java.awt.Color(102, 153, 255));
+        jButtonUpdate.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonUpdate.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButtonDelete.setBackground(new java.awt.Color(255, 0, 0));
+        jButtonDelete.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonDelete.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButtonBack.setBackground(new java.awt.Color(255, 51, 51));
+        jButtonBack.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonBack.setPreferredSize(new java.awt.Dimension(90, 27));
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButtonAdd = new javax.swing.JButton();
+        jButtonUpdate = new javax.swing.JButton();
+        jButtonDelete = new javax.swing.JButton();
+        jButtonBack = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Product Management");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Add, update, or delete products.");
+
+        jButtonAdd.setBackground(new java.awt.Color(102, 153, 255));
+        jButtonAdd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonAdd.setText("Add Product");
+        jButtonAdd.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonAdd.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButtonUpdate.setBackground(new java.awt.Color(102, 153, 255));
+        jButtonUpdate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonUpdate.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonUpdate.setText("Update Product");
+        jButtonUpdate.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonUpdate.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButtonDelete.setBackground(new java.awt.Color(255, 0, 0));
+        jButtonDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButtonDelete.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonDelete.setText("Delete Product");
+        jButtonDelete.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonDelete.setPreferredSize(new java.awt.Dimension(520, 90));
+
+        jButtonBack.setBackground(new java.awt.Color(255, 51, 51));
+        jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonBack.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonBack.setText("Back");
+        jButtonBack.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jButtonBack.setPreferredSize(new java.awt.Dimension(90, 27));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(40, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(30, 30, 30)
+                .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         pack();
-    }
+    }// </editor-fold>//GEN-END:initComponents
 
-    private JButton createPrimaryButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(new Color(102, 153, 255));
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setForeground(Color.WHITE);
-        button.setBorder(BorderFactory.createSoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        button.setPreferredSize(new Dimension(520, 90));
-        return button;
-    }
-
-    private JButton createDangerButton(String text) {
-        JButton button = new JButton(text);
-        button.setBackground(new Color(255, 51, 51));
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setForeground(Color.WHITE);
-        button.setBorder(BorderFactory.createSoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        button.setPreferredSize(new Dimension(520, 90));
-        return button;
-    }
-
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         UiScaleFix.apply();
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -128,7 +234,19 @@ public class ProductManagement extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
 
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new ProductManagement().setVisible(true));
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAdd;
+    private javax.swing.JButton jButtonBack;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonUpdate;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    // End of variables declaration//GEN-END:variables
 }

@@ -63,6 +63,8 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.BorderLayout());
         jPanel1.setBackground(new java.awt.Color(245, 245, 245));
 
+        applyDashboardColors();
+
         javax.swing.JPanel header = new javax.swing.JPanel();
         header.setOpaque(false);
         header.setLayout(new javax.swing.BoxLayout(header, javax.swing.BoxLayout.Y_AXIS));
@@ -122,6 +124,26 @@ public class Dashboard extends javax.swing.JFrame {
 
         jPanel1.revalidate();
         jPanel1.repaint();
+    }
+
+    private void applyDashboardColors() {
+        setButtonStyle(jButton1, new java.awt.Color(90, 141, 238));  // Product Mgmt
+        setButtonStyle(jButton5, new java.awt.Color(69, 163, 229));  // View Stock
+        setButtonStyle(jButton3, new java.awt.Color(46, 204, 113));  // Sales / Billing
+        setButtonStyle(jButton6, new java.awt.Color(0, 184, 169));   // Supplier
+        setButtonStyle(jButton8, new java.awt.Color(246, 170, 28));  // Category Mgmt
+        setButtonStyle(jButton11, new java.awt.Color(255, 127, 80)); // Warranty
+        setButtonStyle(jButton9, new java.awt.Color(46, 134, 171));  // Delivery Mgmt
+        setButtonStyle(jButton12, new java.awt.Color(52, 73, 94));   // Reports
+        setButtonStyle(jButton10, new java.awt.Color(212, 160, 23)); // Employee Mgmt
+
+        setButtonStyle(jButton7, new java.awt.Color(231, 76, 60));   // Logout
+        jButton7.setForeground(new java.awt.Color(255, 255, 255));
+    }
+
+    private void setButtonStyle(javax.swing.JButton button, java.awt.Color background) {
+        button.setBackground(background);
+        button.setForeground(new java.awt.Color(255, 255, 255));
     }
 
     private void openProductManagement() {
