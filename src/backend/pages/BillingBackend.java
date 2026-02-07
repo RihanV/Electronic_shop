@@ -129,13 +129,14 @@ public class BillingBackend {
     String insertInvoiceSql = "INSERT INTO invoices (grand_total) VALUES (?)";
     String insertItemSql = "INSERT INTO invoice_items (invoice_id, product_id, product_name, quantity, unit_price, line_total) " +
         "VALUES (?,?,?,?,?,?)";
-    String selectItemsSql = "SELECT item_id, product_id FROM invoice_items WHERE invoice_id=?";
     String insertWarrantySql = "INSERT INTO product_warranties " +
         "(product_id, invoice_item_id, warranty_months, start_date, end_date, status) " +
         "VALUES (?,?,?,?,?,?)";
 
     try (Connection con = DB.getConnection()) {
       Columns cols = getColumns(con);
+      boolean canCreateWarranty = cols.hasWarrantyMonths
+          && hasColumn(con, "product_warranties", "warranty_months");
       String updateStockSql = cols.hasIsActive ? updateStockSqlWithActive : updateStockSqlSimple;
 
       con.setAutoCommit(false);
@@ -163,30 +164,28 @@ public class BillingBackend {
           }
         }
 
-        try (PreparedStatement ps = con.prepareStatement(insertItemSql)) {
-          for (InvoiceItem item : items) {
-            ps.setInt(1, invoiceId);
-            ps.setInt(2, item.getProductId());
-            ps.setString(3, item.getName());
-            ps.setInt(4, item.getQuantity());
-            ps.setDouble(5, item.getUnitPrice());
-            ps.setDouble(6, item.getTotal());
-            ps.addBatch();
-          }
-          ps.executeBatch();
-        }
-
-        // Create warranty records based on product warranty months (if available)
-        try (PreparedStatement psItems = con.prepareStatement(selectItemsSql);
+        try (PreparedStatement psItem = con.prepareStatement(insertItemSql, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement psWarranty = con.prepareStatement(insertWarrantySql)) {
-          psItems.setInt(1, invoiceId);
-          try (ResultSet rs = psItems.executeQuery()) {
-            while (rs.next()) {
-              int itemId = rs.getInt("item_id");
-              int productId = rs.getInt("product_id");
-              int warrantyMonths = getWarrantyMonths(con, productId);
+          for (InvoiceItem item : items) {
+            psItem.setInt(1, invoiceId);
+            psItem.setInt(2, item.getProductId());
+            psItem.setString(3, item.getName());
+            psItem.setInt(4, item.getQuantity());
+            psItem.setDouble(5, item.getUnitPrice());
+            psItem.setDouble(6, item.getTotal());
+            int affected = psItem.executeUpdate();
+            if (affected == 0) throw new SQLException("Failed to create invoice item");
+
+            int itemId;
+            try (ResultSet keys = psItem.getGeneratedKeys()) {
+              if (!keys.next()) throw new SQLException("Invoice item id not returned");
+              itemId = keys.getInt(1);
+            }
+
+            if (canCreateWarranty) {
+              int warrantyMonths = item.getWarrantyMonths();
               if (warrantyMonths > 0) {
-                psWarranty.setInt(1, productId);
+                psWarranty.setInt(1, item.getProductId());
                 psWarranty.setInt(2, itemId);
                 psWarranty.setInt(3, warrantyMonths);
                 psWarranty.setDate(4, new java.sql.Date(System.currentTimeMillis()));
@@ -196,7 +195,9 @@ public class BillingBackend {
               }
             }
           }
-          psWarranty.executeBatch();
+          if (canCreateWarranty) {
+            psWarranty.executeBatch();
+          }
         }
 
         con.commit();
@@ -209,26 +210,6 @@ public class BillingBackend {
         con.setAutoCommit(true);
       }
     }
-  }
-
-  private int getWarrantyMonths(Connection con, int productId) throws SQLException {
-    String sqlWithProductId = "SELECT warranty_months FROM products WHERE product_id=?";
-    String sqlWithId = "SELECT warranty_months FROM products WHERE id=?";
-    try (PreparedStatement ps = con.prepareStatement(sqlWithProductId)) {
-      ps.setInt(1, productId);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) return rs.getInt("warranty_months");
-      }
-    } catch (SQLException ex) {
-      // fall through to id-based query
-    }
-    try (PreparedStatement ps = con.prepareStatement(sqlWithId)) {
-      ps.setInt(1, productId);
-      try (ResultSet rs = ps.executeQuery()) {
-        if (rs.next()) return rs.getInt("warranty_months");
-      }
-    }
-    return 0;
   }
 
   private java.sql.Date addMonths(java.sql.Date start, int months) {

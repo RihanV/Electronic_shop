@@ -20,6 +20,9 @@ public class AddProduct extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AddProduct.class.getName());
     private final AddProductBackend backend = new AddProductBackend();
     private Map<Integer, String> supplierOptions = new LinkedHashMap<>();
+    private java.util.List<String> categoryOptions = new java.util.ArrayList<>();
+    private boolean hasSuppliers = false;
+    private boolean hasCategories = false;
 
     /**
      * Creates new form AddProduct
@@ -36,6 +39,7 @@ public class AddProduct extends javax.swing.JFrame {
     });
 
     jButton2.addActionListener(e -> onAddProduct());
+    loadCategories();
     loadSuppliers();
     }
 
@@ -65,18 +69,48 @@ public class AddProduct extends javax.swing.JFrame {
             jComboBox2.removeAllItems();
             if (supplierOptions.isEmpty()) {
                 jComboBox2.addItem("No active suppliers");
-                jButton2.setEnabled(false);
+                hasSuppliers = false;
+                updateAddEnabled();
                 return;
             }
             for (String name : supplierOptions.values()) {
                 jComboBox2.addItem(name);
             }
-            jButton2.setEnabled(true);
+            hasSuppliers = true;
+            updateAddEnabled();
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Failed to load suppliers: " + ex.getMessage());
-            jButton2.setEnabled(false);
+            hasSuppliers = false;
+            updateAddEnabled();
         }
+    }
+
+    private void loadCategories() {
+        try {
+            categoryOptions = backend.loadCategoryOptions();
+            jComboBox1.removeAllItems();
+            if (categoryOptions.isEmpty()) {
+                jComboBox1.addItem("No active categories");
+                hasCategories = false;
+                updateAddEnabled();
+                return;
+            }
+            for (String name : categoryOptions) {
+                jComboBox1.addItem(name);
+            }
+            hasCategories = true;
+            updateAddEnabled();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load categories: " + ex.getMessage());
+            hasCategories = false;
+            updateAddEnabled();
+        }
+    }
+
+    private void updateAddEnabled() {
+        jButton2.setEnabled(hasSuppliers && hasCategories);
     }
 
     private void onAddProduct() {
@@ -93,10 +127,18 @@ public class AddProduct extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Category is required.");
             return;
         }
+        if (!hasCategories) {
+            JOptionPane.showMessageDialog(this, "No active categories available.");
+            return;
+        }
 
         int supplierId = getSelectedSupplierId();
         if (supplierId <= 0) {
             JOptionPane.showMessageDialog(this, "Please select a valid supplier.");
+            return;
+        }
+        if (!hasSuppliers) {
+            JOptionPane.showMessageDialog(this, "No active suppliers available.");
             return;
         }
 
@@ -331,6 +373,7 @@ public class AddProduct extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        UiScaleFix.apply();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

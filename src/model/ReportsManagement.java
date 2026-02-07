@@ -24,10 +24,146 @@ public class ReportsManagement extends javax.swing.JFrame {
      */
     public ReportsManagement() {
         initComponents();
+        applyFullScreenLayout();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         loadLowStock();
         loadTopSelling();
         loadProfit();
+    }
+
+    private void applyFullScreenLayout() {
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+
+        jPanel1.removeAll();
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        applyTabLayouts();
+
+        javax.swing.JPanel titlePanel = new javax.swing.JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.Y_AXIS));
+        titlePanel.add(jLabel1);
+        titlePanel.add(javax.swing.Box.createVerticalStrut(4));
+        titlePanel.add(jLabel2);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 28, 12, 28));
+        topPanel.add(titlePanel, java.awt.BorderLayout.WEST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 28, 0, 28));
+        centerPanel.add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+
+        javax.swing.JPanel backPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 0));
+        backPanel.setOpaque(false);
+        jButtonBack.setPreferredSize(new java.awt.Dimension(70, 27));
+        backPanel.add(jButtonBack);
+
+        javax.swing.JPanel bottomPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 28, 24, 28));
+        bottomPanel.add(backPanel, java.awt.BorderLayout.EAST);
+
+        jPanel1.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanel1.add(centerPanel, java.awt.BorderLayout.CENTER);
+        jPanel1.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
+    }
+
+    private void applyTabLayouts() {
+        configureLowStockTab();
+        configureTopSellingTab();
+        configureProfitTab();
+    }
+
+    private void configureLowStockTab() {
+        jPanelLow.removeAll();
+        jPanelLow.setLayout(new java.awt.BorderLayout());
+        jPanelLow.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldLowStock.setPreferredSize(new java.awt.Dimension(80, 27));
+        jButtonLowRefresh.setPreferredSize(new java.awt.Dimension(90, 27));
+
+        javax.swing.JPanel controls = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 12, 0));
+        controls.setOpaque(false);
+        controls.add(jLabel3);
+        controls.add(jTextFieldLowStock);
+        controls.add(jButtonLowRefresh);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 20, 12, 20));
+        topPanel.add(controls, java.awt.BorderLayout.WEST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 20, 20));
+        centerPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPanelLow.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanelLow.add(centerPanel, java.awt.BorderLayout.CENTER);
+    }
+
+    private void configureTopSellingTab() {
+        jPanelTop.removeAll();
+        jPanelTop.setLayout(new java.awt.BorderLayout());
+        jPanelTop.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldTopLimit.setPreferredSize(new java.awt.Dimension(80, 27));
+        jButtonTopRefresh.setPreferredSize(new java.awt.Dimension(90, 27));
+
+        javax.swing.JPanel controls = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 12, 0));
+        controls.setOpaque(false);
+        controls.add(jLabel4);
+        controls.add(jTextFieldTopLimit);
+        controls.add(jButtonTopRefresh);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 20, 12, 20));
+        topPanel.add(controls, java.awt.BorderLayout.WEST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 20, 20));
+        centerPanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        jPanelTop.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanelTop.add(centerPanel, java.awt.BorderLayout.CENTER);
+    }
+
+    private void configureProfitTab() {
+        jPanelProfit.removeAll();
+        jPanelProfit.setLayout(new java.awt.BorderLayout());
+        jPanelProfit.setBackground(new java.awt.Color(0, 0, 0));
+
+        jButtonProfitRefresh.setPreferredSize(new java.awt.Dimension(90, 27));
+
+        javax.swing.JPanel controls = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 12, 0));
+        controls.setOpaque(false);
+        controls.add(jButtonProfitRefresh);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(16, 20, 12, 20));
+        topPanel.add(controls, java.awt.BorderLayout.WEST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 20, 20));
+        centerPanel.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        jPanelProfit.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanelProfit.add(centerPanel, java.awt.BorderLayout.CENTER);
     }
 
     private void loadLowStock() {
@@ -405,6 +541,7 @@ public class ReportsManagement extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        UiScaleFix.apply();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

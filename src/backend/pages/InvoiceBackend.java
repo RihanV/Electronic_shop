@@ -30,8 +30,12 @@ public class InvoiceBackend {
 
   public List<InvoiceItem> loadItems(int invoiceId) throws SQLException {
     if (invoiceId <= 0) throw new IllegalArgumentException("Invalid invoice id");
-    String sql = "SELECT product_id, product_name, quantity, unit_price, line_total " +
-        "FROM invoice_items WHERE invoice_id=? ORDER BY item_id";
+    String sql = "SELECT ii.product_id, ii.product_name, ii.quantity, ii.unit_price, ii.line_total, " +
+        "COALESCE(pw.warranty_months, 0) AS warranty_months, " +
+        "COALESCE(pw.id, 0) AS warranty_id " +
+        "FROM invoice_items ii " +
+        "LEFT JOIN product_warranties pw ON pw.invoice_item_id = ii.item_id " +
+        "WHERE ii.invoice_id=? ORDER BY ii.item_id";
     List<InvoiceItem> out = new ArrayList<>();
     try (Connection con = DB.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -43,7 +47,9 @@ public class InvoiceBackend {
               rs.getString("product_name"),
               rs.getInt("quantity"),
               rs.getDouble("unit_price"),
-              rs.getDouble("line_total")
+              rs.getDouble("line_total"),
+              rs.getInt("warranty_months"),
+              rs.getInt("warranty_id")
           ));
         }
       }

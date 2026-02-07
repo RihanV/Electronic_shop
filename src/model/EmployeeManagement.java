@@ -25,8 +25,76 @@ public class EmployeeManagement extends javax.swing.JFrame {
      */
     public EmployeeManagement() {
         initComponents();
+        applyFullScreenLayout();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         loadEmployees();
+    }
+
+    private void applyFullScreenLayout() {
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+
+        jPanel1.removeAll();
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.JPanel titlePanel = new javax.swing.JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.Y_AXIS));
+        titlePanel.add(jLabel1);
+        titlePanel.add(javax.swing.Box.createVerticalStrut(4));
+        titlePanel.add(jLabel2);
+
+        javax.swing.JLabel searchLabel = new javax.swing.JLabel("Search :");
+        searchLabel.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        searchLabel.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.JPanel searchPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 12, 0));
+        searchPanel.setOpaque(false);
+        jButtonSearch.setPreferredSize(new java.awt.Dimension(90, 27));
+        jButtonRefresh.setPreferredSize(new java.awt.Dimension(90, 27));
+        jButtonAdd.setPreferredSize(new java.awt.Dimension(120, 27));
+        jButtonUpdate.setPreferredSize(new java.awt.Dimension(120, 27));
+        jButtonDelete.setPreferredSize(new java.awt.Dimension(90, 27));
+        jTextFieldSearch.setPreferredSize(new java.awt.Dimension(220, 28));
+        searchPanel.add(searchLabel);
+        searchPanel.add(jTextFieldSearch);
+        searchPanel.add(jButtonSearch);
+        searchPanel.add(jButtonRefresh);
+        searchPanel.add(jButtonAdd);
+        searchPanel.add(jButtonUpdate);
+        searchPanel.add(jButtonDelete);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 28, 12, 28));
+        topPanel.add(titlePanel, java.awt.BorderLayout.WEST);
+        topPanel.add(searchPanel, java.awt.BorderLayout.EAST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 28, 0, 28));
+        centerPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        javax.swing.JPanel rightActions = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 12, 0));
+        rightActions.setOpaque(false);
+        jButtonAttendance.setPreferredSize(new java.awt.Dimension(140, 27));
+        jButtonBack.setPreferredSize(new java.awt.Dimension(70, 27));
+        rightActions.add(jButtonAttendance);
+        rightActions.add(jButtonBack);
+
+        javax.swing.JPanel bottomPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 28, 24, 28));
+        bottomPanel.add(rightActions, java.awt.BorderLayout.EAST);
+
+        jPanel1.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanel1.add(centerPanel, java.awt.BorderLayout.CENTER);
+        jPanel1.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
     }
 
     private void loadEmployees() {
@@ -51,31 +119,66 @@ public class EmployeeManagement extends javax.swing.JFrame {
     }
 
     private void addEmployee() {
-        String name = JOptionPane.showInputDialog(this, "Employee name:");
-        if (name == null) return;
-        name = name.trim();
-        if (name.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Employee name is required.");
-            return;
-        }
-        String role = JOptionPane.showInputDialog(this, "Role:");
-        if (role != null) role = role.trim();
-        String phone = JOptionPane.showInputDialog(this, "Phone (optional):");
-        if (phone != null) phone = phone.trim();
-        String email = JOptionPane.showInputDialog(this, "Email (optional):");
-        if (email != null) email = email.trim();
+        Employee e = promptEmployeeDetails("Add Employee", null);
+        if (e == null) return;
 
         try {
-            Employee e = new Employee();
-            e.setName(name);
-            e.setRole(role);
-            e.setPhone(phone);
-            e.setEmail(email);
             backend.addEmployee(e);
             loadEmployees();
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Failed to add employee: " + ex.getMessage());
+        }
+    }
+
+    private Employee promptEmployeeDetails(String title, Employee seed) {
+        javax.swing.JTextField nameField = new javax.swing.JTextField(20);
+        javax.swing.JTextField roleField = new javax.swing.JTextField(20);
+        javax.swing.JTextField phoneField = new javax.swing.JTextField(20);
+        javax.swing.JTextField emailField = new javax.swing.JTextField(20);
+
+        if (seed != null) {
+            if (seed.getName() != null) nameField.setText(seed.getName());
+            if (seed.getRole() != null) roleField.setText(seed.getRole());
+            if (seed.getPhone() != null) phoneField.setText(seed.getPhone());
+            if (seed.getEmail() != null) emailField.setText(seed.getEmail());
+        }
+
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(0, 2, 8, 8));
+        panel.add(new javax.swing.JLabel("Name"));
+        panel.add(nameField);
+        panel.add(new javax.swing.JLabel("Role"));
+        panel.add(roleField);
+        panel.add(new javax.swing.JLabel("Phone"));
+        panel.add(phoneField);
+        panel.add(new javax.swing.JLabel("Email"));
+        panel.add(emailField);
+
+        while (true) {
+            int result = JOptionPane.showConfirmDialog(
+                this,
+                panel,
+                title,
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+            );
+            if (result != JOptionPane.OK_OPTION) return null;
+
+            String name = nameField.getText().trim();
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Employee name is required.");
+                continue;
+            }
+
+            Employee e = new Employee();
+            e.setName(name);
+            String role = roleField.getText().trim();
+            String phone = phoneField.getText().trim();
+            String email = emailField.getText().trim();
+            e.setRole(role.isEmpty() ? null : role);
+            e.setPhone(phone.isEmpty() ? null : phone);
+            e.setEmail(email.isEmpty() ? null : email);
+            return e;
         }
     }
 
@@ -86,24 +189,21 @@ public class EmployeeManagement extends javax.swing.JFrame {
             return;
         }
         int id = (int) jTable1.getValueAt(row, 0);
-        String name = JOptionPane.showInputDialog(this, "Name:", jTable1.getValueAt(row, 1));
-        if (name == null) return;
-        name = name.trim();
-        if (name.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Employee name is required.");
-            return;
-        }
-        String role = JOptionPane.showInputDialog(this, "Role:", jTable1.getValueAt(row, 2));
-        String phone = JOptionPane.showInputDialog(this, "Phone:", jTable1.getValueAt(row, 3));
-        String email = JOptionPane.showInputDialog(this, "Email:", jTable1.getValueAt(row, 4));
+        Employee seed = new Employee();
+        seed.setId(id);
+        Object nameObj = jTable1.getValueAt(row, 1);
+        Object roleObj = jTable1.getValueAt(row, 2);
+        Object phoneObj = jTable1.getValueAt(row, 3);
+        Object emailObj = jTable1.getValueAt(row, 4);
+        seed.setName(nameObj == null ? null : nameObj.toString());
+        seed.setRole(roleObj == null ? null : roleObj.toString());
+        seed.setPhone(phoneObj == null ? null : phoneObj.toString());
+        seed.setEmail(emailObj == null ? null : emailObj.toString());
+        Employee e = promptEmployeeDetails("Update Employee", seed);
+        if (e == null) return;
 
         try {
-            Employee e = new Employee();
             e.setId(id);
-            e.setName(name);
-            e.setRole(role == null ? null : role.trim());
-            e.setPhone(phone == null ? null : phone.trim());
-            e.setEmail(email == null ? null : email.trim());
             backend.updateEmployee(e);
             loadEmployees();
         } catch (Exception ex) {
@@ -112,22 +212,27 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
-    private void deactivateEmployee() {
+    private void deleteEmployee() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Select an employee row to deactivate.");
+            JOptionPane.showMessageDialog(this, "Select an employee row to delete.");
             return;
         }
         int id = (int) jTable1.getValueAt(row, 0);
-        int confirm = JOptionPane.showConfirmDialog(this, "Deactivate this employee?", "Confirm", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this, "Delete this employee?", "Confirm", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) return;
         try {
             backend.deactivateEmployee(id);
             loadEmployees();
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Failed to deactivate employee: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Failed to delete employee: " + ex.getMessage());
         }
+    }
+
+    private void markAttendance() {
+        new AttendanceManagement().setVisible(true);
+        dispose();
     }
 
     private void fillTable(List<Employee> employees) {
@@ -155,9 +260,10 @@ public class EmployeeManagement extends javax.swing.JFrame {
         jButtonRefresh = new javax.swing.JButton();
         jButtonAdd = new javax.swing.JButton();
         jButtonUpdate = new javax.swing.JButton();
-        jButtonDeactivate = new javax.swing.JButton();
+        jButtonDelete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButtonAttendance = new javax.swing.JButton();
         jButtonBack = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -197,7 +303,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         jButtonAdd.setBackground(new java.awt.Color(102, 153, 255));
         jButtonAdd.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonAdd.setText("Add");
+        jButtonAdd.setText("Add Employee");
         jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddActionPerformed(evt);
@@ -207,20 +313,30 @@ public class EmployeeManagement extends javax.swing.JFrame {
         jButtonUpdate.setBackground(new java.awt.Color(102, 153, 255));
         jButtonUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButtonUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonUpdate.setText("Update");
+        jButtonUpdate.setText("Update Employee");
         jButtonUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonUpdateActionPerformed(evt);
             }
         });
 
-        jButtonDeactivate.setBackground(new java.awt.Color(102, 153, 255));
-        jButtonDeactivate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButtonDeactivate.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonDeactivate.setText("Deactivate");
-        jButtonDeactivate.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDelete.setBackground(new java.awt.Color(102, 153, 255));
+        jButtonDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonDelete.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonDelete.setText("Delete");
+        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeactivateActionPerformed(evt);
+                jButtonDeleteActionPerformed(evt);
+            }
+        });
+
+        jButtonAttendance.setBackground(new java.awt.Color(102, 153, 255));
+        jButtonAttendance.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonAttendance.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonAttendance.setText("Mark Attendance");
+        jButtonAttendance.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAttendanceActionPerformed(evt);
             }
         });
 
@@ -273,15 +389,17 @@ public class EmployeeManagement extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonDeactivate, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(48, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonAttendance, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonBack, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48))
         );
@@ -300,11 +418,13 @@ public class EmployeeManagement extends javax.swing.JFrame {
                         .addComponent(jButtonRefresh, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonDeactivate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(28, 28, 28)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonBack)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAttendance)
+                    .addComponent(jButtonBack))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -338,9 +458,13 @@ public class EmployeeManagement extends javax.swing.JFrame {
         updateEmployee();
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
-    private void jButtonDeactivateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeactivateActionPerformed
-        deactivateEmployee();
-    }//GEN-LAST:event_jButtonDeactivateActionPerformed
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+        deleteEmployee();
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
+
+    private void jButtonAttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAttendanceActionPerformed
+        markAttendance();
+    }//GEN-LAST:event_jButtonAttendanceActionPerformed
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
         new Dashboard().setVisible(true);
@@ -351,6 +475,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        UiScaleFix.apply();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -374,8 +499,9 @@ public class EmployeeManagement extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
+    private javax.swing.JButton jButtonAttendance;
     private javax.swing.JButton jButtonBack;
-    private javax.swing.JButton jButtonDeactivate;
+    private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonRefresh;
     private javax.swing.JButton jButtonSearch;
     private javax.swing.JButton jButtonUpdate;

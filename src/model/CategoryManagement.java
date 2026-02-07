@@ -25,8 +25,72 @@ public class CategoryManagement extends javax.swing.JFrame {
      */
     public CategoryManagement() {
         initComponents();
+        applyFullScreenLayout();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         loadCategories();
+    }
+
+    private void applyFullScreenLayout() {
+        getContentPane().removeAll();
+        getContentPane().setLayout(new java.awt.BorderLayout());
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+
+        jPanel1.removeAll();
+        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.JPanel titlePanel = new javax.swing.JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new javax.swing.BoxLayout(titlePanel, javax.swing.BoxLayout.Y_AXIS));
+        titlePanel.add(jLabel1);
+        titlePanel.add(javax.swing.Box.createVerticalStrut(4));
+        titlePanel.add(jLabel2);
+
+        javax.swing.JLabel searchLabel = new javax.swing.JLabel("Search :");
+        searchLabel.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        searchLabel.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.JPanel searchPanel = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 12, 0));
+        searchPanel.setOpaque(false);
+        jTextFieldSearch.setPreferredSize(new java.awt.Dimension(220, 28));
+        searchPanel.add(searchLabel);
+        searchPanel.add(jTextFieldSearch);
+        searchPanel.add(jButtonSearch);
+        searchPanel.add(jButtonRefresh);
+        searchPanel.add(jButtonDeactivate);
+
+        javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(24, 28, 12, 28));
+        topPanel.add(titlePanel, java.awt.BorderLayout.WEST);
+        topPanel.add(searchPanel, java.awt.BorderLayout.EAST);
+
+        javax.swing.JPanel centerPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 28, 0, 28));
+        centerPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        javax.swing.JPanel leftActions = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 12, 0));
+        leftActions.setOpaque(false);
+        leftActions.add(jButtonAdd);
+        leftActions.add(jButtonRename);
+
+        javax.swing.JPanel rightActions = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 0));
+        rightActions.setOpaque(false);
+        rightActions.add(jButtonBack);
+
+        javax.swing.JPanel bottomPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
+        bottomPanel.setOpaque(false);
+        bottomPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 28, 24, 28));
+        bottomPanel.add(leftActions, java.awt.BorderLayout.WEST);
+        bottomPanel.add(rightActions, java.awt.BorderLayout.EAST);
+
+        jPanel1.add(topPanel, java.awt.BorderLayout.NORTH);
+        jPanel1.add(centerPanel, java.awt.BorderLayout.CENTER);
+        jPanel1.add(bottomPanel, java.awt.BorderLayout.SOUTH);
+
+        revalidate();
+        repaint();
     }
 
     private void loadCategories() {
@@ -331,6 +395,7 @@ public class CategoryManagement extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        UiScaleFix.apply();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
