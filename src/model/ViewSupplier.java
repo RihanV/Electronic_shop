@@ -13,8 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Supplier list screen: search, refresh, update, and deactivate suppliers.
+ * Uses ViewSupplierBackend for queries and SupplierManagementBackend for updates.
  */
 public class ViewSupplier extends javax.swing.JFrame {
     
@@ -25,6 +25,7 @@ public class ViewSupplier extends javax.swing.JFrame {
     /**
      * Creates new form suppliers
      */
+    /** Creates the form and loads the supplier list. */
 public ViewSupplier() {
     initComponents();
     applyFullScreenLayout();
@@ -36,6 +37,7 @@ public ViewSupplier() {
     loadSuppliers();
 }
 
+    /** Builds a full-screen layout using the existing Swing components. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -63,6 +65,7 @@ public ViewSupplier() {
         searchPanel.add(jTextFieldSearch);
         searchPanel.add(jButton4);
         searchPanel.add(jButton1);
+        searchPanel.add(jButton5);
         searchPanel.add(jButton2);
 
         javax.swing.JPanel topPanel = new javax.swing.JPanel(new java.awt.BorderLayout());
@@ -108,6 +111,7 @@ public ViewSupplier() {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jTextFieldSearch = new javax.swing.JTextField();
@@ -154,6 +158,18 @@ public ViewSupplier() {
         jButton1.setPreferredSize(new java.awt.Dimension(90, 27));
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jButton5.setBackground(new java.awt.Color(102, 153, 255));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setText("Update");
+        jButton5.setPreferredSize(new java.awt.Dimension(90, 27));
+        jButton5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         jButton2.setBackground(new java.awt.Color(102, 153, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
@@ -199,6 +215,8 @@ public ViewSupplier() {
                         .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1200, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -220,6 +238,7 @@ public ViewSupplier() {
                         .addComponent(jTextFieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton4))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
@@ -260,6 +279,11 @@ public ViewSupplier() {
         searchSuppliers();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        updateSelected();
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    /** Loads all active suppliers into the table. */
     private void loadSuppliers() {
         try {
             List<Supplier> suppliers = viewBackend.loadAllSuppliers();
@@ -270,6 +294,7 @@ public ViewSupplier() {
         }
     }
 
+    /** Runs a keyword search and refreshes the table. */
     private void searchSuppliers() {
         String keyword = jTextFieldSearch.getText().trim();
         try {
@@ -281,6 +306,7 @@ public ViewSupplier() {
         }
     }
 
+    /** Clears the table and fills it with supplier rows. */
     private void fillTable(List<Supplier> suppliers) {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
@@ -293,6 +319,7 @@ public ViewSupplier() {
         }
     }
 
+    /** Deactivates the selected supplier row. */
     private void deactivateSelected() {
         int row = jTable2.getSelectedRow();
         if (row < 0) {
@@ -312,6 +339,95 @@ public ViewSupplier() {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Failed to deactivate supplier: " + ex.getMessage());
         }
+    }
+
+    /** Opens an update dialog and saves changes for the selected supplier. */
+    private void updateSelected() {
+        int row = jTable2.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a supplier row to update.");
+            return;
+        }
+        int supplierId;
+        try {
+            supplierId = parseSupplierId(jTable2.getValueAt(row, 0));
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            return;
+        }
+        String currentName = getCellString(row, 1);
+        String currentContact = getCellString(row, 2);
+
+        javax.swing.JTextField nameField = new javax.swing.JTextField(currentName, 22);
+        javax.swing.JTextField contactField = new javax.swing.JTextField(currentContact, 22);
+
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
+        gbc.insets = new java.awt.Insets(4, 6, 4, 6);
+        gbc.anchor = java.awt.GridBagConstraints.WEST;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        panel.add(new javax.swing.JLabel("Supplier Name"), gbc);
+        gbc.gridx = 1;
+        panel.add(nameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        panel.add(new javax.swing.JLabel("Contact"), gbc);
+        gbc.gridx = 1;
+        panel.add(contactField, gbc);
+
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            panel,
+            "Update Supplier",
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (choice != JOptionPane.OK_OPTION) return;
+
+        String name = nameField.getText().trim();
+        String contact = contactField.getText().trim();
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Supplier name is required.");
+            return;
+        }
+        if (!FieldValidators.isValidPhone(contact)) {
+            JOptionPane.showMessageDialog(this, "Invalid contact number.");
+            return;
+        }
+
+        try {
+            boolean ok = manageBackend.updateSupplier(supplierId, name, contact);
+            if (ok) {
+                JOptionPane.showMessageDialog(this, "Supplier updated.");
+                loadSuppliers();
+            } else {
+                JOptionPane.showMessageDialog(this, "No changes were made.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to update supplier: " + ex.getMessage());
+        }
+    }
+
+    /** Safely parses supplier ID from a table cell. */
+    private int parseSupplierId(Object value) {
+        if (value == null) throw new IllegalArgumentException("Invalid supplier id.");
+        if (value instanceof Integer) return (Integer) value;
+        String s = value.toString().trim();
+        if (s.isEmpty()) throw new IllegalArgumentException("Invalid supplier id.");
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("Invalid supplier id.");
+        }
+    }
+
+    /** Returns trimmed string from a table cell (empty if null). */
+    private String getCellString(int row, int col) {
+        Object value = jTable2.getValueAt(row, col);
+        return value == null ? "" : value.toString().trim();
     }
 
     /**
@@ -345,6 +461,7 @@ public ViewSupplier() {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

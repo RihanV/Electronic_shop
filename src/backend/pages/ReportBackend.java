@@ -5,7 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Backend report queries for ReportsManagement UI. */
 public class ReportBackend {
+  /** Returns products under a stock threshold. */
   public List<Object[]> lowStock(int threshold) throws SQLException {
     if (threshold < 0) threshold = 0;
     String sqlPid = "SELECT product_id, name, quantity FROM products WHERE is_active=1 AND quantity <= ? ORDER BY quantity ASC";
@@ -19,6 +21,7 @@ public class ReportBackend {
     }
   }
 
+  /** Executes low-stock query with given SQL. */
   private List<Object[]> runLowStock(Connection con, String sql, int threshold) throws SQLException {
     try (PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setInt(1, threshold);
@@ -32,6 +35,7 @@ public class ReportBackend {
     }
   }
 
+  /** Returns top-selling products by quantity. */
   public List<Object[]> topSelling(int limit) throws SQLException {
     if (limit <= 0) limit = 10;
     String sql = "SELECT product_id, product_name, SUM(quantity) AS qty " +
@@ -48,6 +52,7 @@ public class ReportBackend {
     }
   }
 
+  /** Returns profit per product, handling schema differences. */
   public List<Object[]> profitReport() throws SQLException {
     try (Connection con = DB.getConnection()) {
       String productIdCol = hasColumn(con, "products", "product_id") ? "product_id" : "id";
@@ -61,6 +66,7 @@ public class ReportBackend {
     }
   }
 
+  /** Executes profit query and maps rows. */
   private List<Object[]> runProfit(Connection con, String sql) throws SQLException {
     try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
       List<Object[]> out = new ArrayList<>();
@@ -71,6 +77,7 @@ public class ReportBackend {
     }
   }
 
+  /** Checks if a column exists (case-insensitive). */
   private boolean hasColumn(Connection con, String table, String column) throws SQLException {
     DatabaseMetaData meta = con.getMetaData();
     try (ResultSet rs = meta.getColumns(con.getCatalog(), null, table, column)) {

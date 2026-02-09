@@ -11,17 +11,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Reports screen: low stock, top selling, and profit reports.
  */
 public class ReportsManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ReportsManagement.class.getName());
     private final ReportBackend backend = new ReportBackend();
 
-    /**
-     * Creates new form ReportsManagement
-     */
+    /** Creates the form, applies layout, and loads report data. */
     public ReportsManagement() {
         initComponents();
         applyFullScreenLayout();
@@ -31,6 +28,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         loadProfit();
     }
 
+    /** Builds the full-screen layout and tabs. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -77,12 +75,14 @@ public class ReportsManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Configures layout for each report tab. */
     private void applyTabLayouts() {
         configureLowStockTab();
         configureTopSellingTab();
         configureProfitTab();
     }
 
+    /** Layout for the low-stock report tab. */
     private void configureLowStockTab() {
         jPanelLow.removeAll();
         jPanelLow.setLayout(new java.awt.BorderLayout());
@@ -112,6 +112,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         jPanelLow.add(centerPanel, java.awt.BorderLayout.CENTER);
     }
 
+    /** Layout for the top-selling report tab. */
     private void configureTopSellingTab() {
         jPanelTop.removeAll();
         jPanelTop.setLayout(new java.awt.BorderLayout());
@@ -141,6 +142,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         jPanelTop.add(centerPanel, java.awt.BorderLayout.CENTER);
     }
 
+    /** Layout for the profit report tab. */
     private void configureProfitTab() {
         jPanelProfit.removeAll();
         jPanelProfit.setLayout(new java.awt.BorderLayout());
@@ -166,6 +168,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         jPanelProfit.add(centerPanel, java.awt.BorderLayout.CENTER);
     }
 
+    /** Loads low-stock rows using a threshold. */
     private void loadLowStock() {
         int threshold = parseIntSafe(jTextFieldLowStock.getText(), 5);
         try {
@@ -181,6 +184,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Loads top-selling rows using a limit. */
     private void loadTopSelling() {
         int limit = parseIntSafe(jTextFieldTopLimit.getText(), 10);
         try {
@@ -196,6 +200,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Loads profit report rows. */
     private void loadProfit() {
         try {
             List<Object[]> rows = backend.profitReport();
@@ -210,6 +215,7 @@ public class ReportsManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Safe int parsing with a fallback value. */
     private int parseIntSafe(String value, int fallback) {
         if (value == null) return fallback;
         String v = value.trim();

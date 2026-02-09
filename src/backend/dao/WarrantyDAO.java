@@ -6,7 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** DAO for warranty records and reporting. */
 public class WarrantyDAO {
+  /** Lists all warranty records with product names. */
   public List<WarrantyRecord> listAll() throws SQLException {
     String sql = "SELECT pw.id, pw.product_id, p.name AS product_name, pw.invoice_item_id, " +
         "pw.warranty_months, pw.start_date, pw.end_date, pw.status " +
@@ -20,6 +22,7 @@ public class WarrantyDAO {
     }
   }
 
+  /** Searches warranty records by status, product name, or product id. */
   public List<WarrantyRecord> search(String keyword) throws SQLException {
     String sql = "SELECT pw.id, pw.product_id, p.name AS product_name, pw.invoice_item_id, " +
         "pw.warranty_months, pw.start_date, pw.end_date, pw.status " +
@@ -40,6 +43,7 @@ public class WarrantyDAO {
     }
   }
 
+  /** Maps a result set row into a WarrantyRecord object. */
   private WarrantyRecord map(ResultSet rs) throws SQLException {
     Integer invoiceItemId = rs.getObject("invoice_item_id") == null ? null : rs.getInt("invoice_item_id");
     return new WarrantyRecord(

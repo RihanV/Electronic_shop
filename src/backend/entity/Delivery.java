@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing a delivery record. */
 public class Delivery {
   private int id;
   private String customerName;

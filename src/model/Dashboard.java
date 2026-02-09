@@ -7,16 +7,14 @@ package model;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author DELL
+ * Main navigation dashboard for the app.
+ * Provides buttons to open each management module.
  */
 public class Dashboard extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Dashboard.class.getName());
 
-    /**
-     * Creates new form Dashboard
-     */
+    /** Builds the dashboard layout and wires navigation buttons. */
    public Dashboard() {
     initComponents();
 
@@ -38,7 +36,7 @@ public class Dashboard extends javax.swing.JFrame {
     jButton1.addActionListener(e -> openProductManagement());
     jButton3.addActionListener(e -> { new Billing().setVisible(true); dispose(); });
     jButton5.addActionListener(e -> { new stock().setVisible(true); dispose(); });
-    jButton6.addActionListener(e -> { new SupplierManagement().setVisible(true); dispose(); });
+    jButton6.addActionListener(e -> openSupplierManagement());
     jButton8.addActionListener(e -> { new CategoryManagement().setVisible(true); dispose(); });
     jButton9.addActionListener(e -> { new DeliveryManagement().setVisible(true); dispose(); });
     jButton10.addActionListener(e -> {
@@ -58,6 +56,7 @@ public class Dashboard extends javax.swing.JFrame {
     });
 }
 
+    /** Arranges the header, button grid, and footer. */
     private void applyDashboardLayout() {
         jPanel1.removeAll();
         jPanel1.setLayout(new java.awt.BorderLayout());
@@ -126,6 +125,7 @@ public class Dashboard extends javax.swing.JFrame {
         jPanel1.repaint();
     }
 
+    /** Applies consistent colors to dashboard buttons. */
     private void applyDashboardColors() {
         setButtonStyle(jButton1, new java.awt.Color(90, 141, 238));  // Product Mgmt
         setButtonStyle(jButton5, new java.awt.Color(69, 163, 229));  // View Stock
@@ -141,14 +141,27 @@ public class Dashboard extends javax.swing.JFrame {
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
     }
 
+    /** Helper to set background/foreground color on a button. */
     private void setButtonStyle(javax.swing.JButton button, java.awt.Color background) {
         button.setBackground(background);
         button.setForeground(new java.awt.Color(255, 255, 255));
     }
 
+    /** Opens product management screen. */
     private void openProductManagement() {
         new ProductManagement().setVisible(true);
         dispose();
+    }
+
+    /** Opens supplier management screen with error handling. */
+    private void openSupplierManagement() {
+        try {
+            new SupplierManagement().setVisible(true);
+            dispose();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to open Supplier: " + ex.getMessage());
+        }
     }
 
     /**

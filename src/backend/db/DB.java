@@ -3,10 +3,14 @@ package backend.db;
 import java.sql.*;
 import java.util.Properties;
 
+/**
+ * Central DB helper to open JDBC connections using DbConfig.
+ */
 public final class DB {
   private static volatile boolean driverLoaded = false;
   private DB() {}
 
+  /** Loads JDBC driver once and returns a new connection. */
   public static Connection getConnection() throws SQLException {
     Properties p = DbConfig.load();
     try {

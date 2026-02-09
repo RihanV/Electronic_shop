@@ -11,6 +11,7 @@ import java.sql.*;
  */
 public class DeleteItemBackend {
 
+  /** Soft-deactivates a product by id. */
   public boolean deactivateProduct(int productId) throws SQLException {
     if (productId <= 0) throw new IllegalArgumentException("Invalid product id");
     String sql = "UPDATE products SET is_active=0 WHERE product_id=?";
@@ -20,6 +21,7 @@ public class DeleteItemBackend {
     }
   }
 
+  /** Soft-deactivates a supplier by id. */
   public boolean deactivateSupplier(int supplierId) throws SQLException {
     if (supplierId <= 0) throw new IllegalArgumentException("Invalid supplier id");
     String sql = "UPDATE suppliers SET is_active=0 WHERE supplier_id=?";
@@ -29,6 +31,7 @@ public class DeleteItemBackend {
     }
   }
 
+  /** Loads a product by id (active or inactive). */
   public Product loadProductById(int productId) throws SQLException {
     if (productId <= 0) throw new IllegalArgumentException("Invalid product id");
     String sql = "SELECT product_id, name, category, quantity, price, is_active FROM products WHERE product_id=?";

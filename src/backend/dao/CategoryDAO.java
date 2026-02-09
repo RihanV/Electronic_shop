@@ -6,7 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** DAO for category table CRUD operations. */
 public class CategoryDAO {
+  /** Inserts a new category and returns generated id. */
   public int create(String name) throws SQLException {
     String sql = "INSERT INTO categories(name,is_active) VALUES (?,1)";
     try (Connection c = DB.getConnection();
@@ -19,6 +21,7 @@ public class CategoryDAO {
     }
   }
 
+  /** Renames a category by id. */
   public boolean rename(int id, String name) throws SQLException {
     String sql = "UPDATE categories SET name=? WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -28,6 +31,7 @@ public class CategoryDAO {
     }
   }
 
+  /** Soft-deactivates a category by id. */
   public boolean deactivate(int id) throws SQLException {
     String sql = "UPDATE categories SET is_active=0 WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -36,6 +40,7 @@ public class CategoryDAO {
     }
   }
 
+  /** Lists active categories. */
   public List<Category> listActive() throws SQLException {
     String sql = "SELECT id,name,is_active FROM categories WHERE is_active=1 ORDER BY name";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -47,6 +52,7 @@ public class CategoryDAO {
     }
   }
 
+  /** Searches categories by name keyword. */
   public List<Category> search(String keyword) throws SQLException {
     String sql = "SELECT id,name,is_active FROM categories WHERE name LIKE ? ORDER BY name";
     String like = "%" + keyword + "%";

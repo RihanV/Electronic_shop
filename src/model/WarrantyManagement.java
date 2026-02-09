@@ -12,17 +12,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Warranty tracking screen: view and search warranty records.
  */
 public class WarrantyManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(WarrantyManagement.class.getName());
     private final WarrantyBackend backend = new WarrantyBackend();
 
-    /**
-     * Creates new form WarrantyManagement
-     */
+    /** Creates the form, applies layout, and loads warranty data. */
     public WarrantyManagement() {
         initComponents();
         applyFullScreenLayout();
@@ -30,6 +27,7 @@ public class WarrantyManagement extends javax.swing.JFrame {
         loadWarranties();
     }
 
+    /** Builds the full-screen layout for the warranty table. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -86,6 +84,7 @@ public class WarrantyManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Loads all warranty records into the table. */
     private void loadWarranties() {
         try {
             List<WarrantyRecord> items = backend.loadAll();
@@ -96,6 +95,7 @@ public class WarrantyManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Searches warranties by keyword. */
     private void searchWarranties() {
         String keyword = jTextFieldSearch.getText().trim();
         try {
@@ -107,6 +107,7 @@ public class WarrantyManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Clears and fills the warranty table. */
     private void fillTable(List<WarrantyRecord> items) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);

@@ -9,17 +9,14 @@ import backend.pages.DeleteItemBackend;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author sanid
+ * Product deactivation screen (soft delete by product ID).
  */
 public class DeleteItem extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DeleteItem.class.getName());
     private final DeleteItemBackend backend = new DeleteItemBackend();
 
-    /**
-     * Creates new form Delete
-     */
+    /** Creates the form and centers the content panel. */
 public DeleteItem() {
     initComponents();
 
@@ -27,6 +24,7 @@ public DeleteItem() {
     setLocationRelativeTo(null);
 }
 
+    /** Centers the content panel in the window. */
     private void centerContentPanel() {
         java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
         gbc.gridx = 0;
@@ -329,6 +327,7 @@ public DeleteItem() {
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    /** Loads product details by ID into the form fields. */
     private void onLoadProduct() {
         String idText = jTextField1.getText().trim();
         int productId;
@@ -358,6 +357,7 @@ public DeleteItem() {
         }
     }
 
+    /** Deactivates the product (soft delete) by ID after confirmation. */
     private void onDeleteProduct() {
         String idText = jTextField1.getText().trim();
         int productId;

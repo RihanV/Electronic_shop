@@ -19,6 +19,7 @@ import java.util.Map;
  */
 public class BillingBackend {
 
+  /** Returns active product options for dropdowns (id -> name). */
   public Map<Integer, String> loadProductOptions() throws SQLException {
     try (Connection con = DB.getConnection()) {
       Columns cols = getColumns(con);
@@ -29,6 +30,7 @@ public class BillingBackend {
     }
   }
 
+  /** Loads a single product by id (active if supported by schema). */
   public Product loadProductById(int productId) throws SQLException {
     if (productId <= 0) throw new IllegalArgumentException("Invalid product id");
     try (Connection con = DB.getConnection()) {
@@ -46,6 +48,7 @@ public class BillingBackend {
     }
   }
 
+  /** Loads a single product by exact name (active if supported by schema). */
   public Product loadProductByName(String name) throws SQLException {
     if (name == null || name.trim().isEmpty()) {
       throw new IllegalArgumentException("Product name is required");
@@ -65,6 +68,7 @@ public class BillingBackend {
     }
   }
 
+  /** Searches products by id or name (active if supported by schema). */
   public List<Product> searchProducts(String keyword) throws SQLException {
     if (keyword == null) keyword = "";
     keyword = keyword.trim();
@@ -93,6 +97,7 @@ public class BillingBackend {
     }
   }
 
+  /** Decrements stock if quantity is available. */
   public boolean reduceStock(int productId, int qty) throws SQLException {
     if (productId <= 0) throw new IllegalArgumentException("Invalid product id");
     if (qty <= 0) throw new IllegalArgumentException("Quantity must be positive");
@@ -113,6 +118,7 @@ public class BillingBackend {
     }
   }
 
+  /** Creates invoice, items, optional warranties, and updates stock in one transaction. */
   public int createInvoice(List<InvoiceItem> items) throws SQLException {
     if (items == null || items.isEmpty()) throw new IllegalArgumentException("Invoice is empty");
 
@@ -212,6 +218,7 @@ public class BillingBackend {
     }
   }
 
+  /** Adds months to a SQL date. */
   private java.sql.Date addMonths(java.sql.Date start, int months) {
     java.util.Calendar cal = java.util.Calendar.getInstance();
     cal.setTime(start);
@@ -235,6 +242,7 @@ public class BillingBackend {
     }
   }
 
+  /** Detects available columns for backward-compatible queries. */
   private Columns getColumns(Connection con) {
     boolean hasIsActive = hasColumn(con, "products", "is_active");
     boolean hasCategory = hasColumn(con, "products", "category");
@@ -244,6 +252,7 @@ public class BillingBackend {
     return new Columns(hasIsActive, hasCategory, hasSupplierId, hasCostPrice, hasWarrantyMonths);
   }
 
+  /** Checks if a column exists by running a lightweight query. */
   private boolean hasColumn(Connection con, String table, String column) {
     String sql = "SELECT " + column + " FROM " + table + " LIMIT 1";
     try (PreparedStatement ps = con.prepareStatement(sql);
@@ -254,6 +263,7 @@ public class BillingBackend {
     }
   }
 
+  /** Builds a SELECT list based on available schema columns. */
   private String productSelect(Columns cols) {
     String categoryExpr = cols.hasCategory ? "category" : "'' AS category";
     String supplierExpr = cols.hasSupplierId ? "supplier_id" : "0 AS supplier_id";
@@ -263,6 +273,7 @@ public class BillingBackend {
     return "product_id, name, " + categoryExpr + ", " + supplierExpr + ", " + costExpr + ", price, quantity, " + warrantyExpr + ", " + activeExpr;
   }
 
+  /** Loads product options using the given SQL. */
   private Map<Integer, String> loadProductOptions(Connection con, String sql) throws SQLException {
     Map<Integer, String> out = new LinkedHashMap<>();
     try (PreparedStatement ps = con.prepareStatement(sql);
@@ -274,6 +285,7 @@ public class BillingBackend {
     return out;
   }
 
+  /** Maps a result set row into a Product object. */
   private Product mapProduct(ResultSet rs) throws SQLException {
     boolean isActive = rs.getInt("is_active") == 1;
     return new Product(

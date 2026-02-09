@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing a supplier record. */
 public class Supplier {
   private int id;
   private String name;

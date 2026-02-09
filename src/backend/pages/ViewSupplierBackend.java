@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class ViewSupplierBackend {
 
+  /** Loads all active suppliers. */
   public List<Supplier> loadAllSuppliers() throws SQLException {
     String sql = "SELECT supplier_id, supplier_name, contact, is_active FROM suppliers WHERE is_active=1 ORDER BY supplier_id DESC";
     List<Supplier> out = new ArrayList<>();
@@ -32,6 +33,7 @@ public class ViewSupplierBackend {
     return out;
   }
 
+  /** Searches active suppliers by name or contact. */
   public List<Supplier> searchSuppliers(String keyword) throws SQLException {
     if (keyword == null) keyword = "";
     keyword = keyword.trim();

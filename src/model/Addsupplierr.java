@@ -9,8 +9,8 @@ import backend.pages.AddSupplierBackend;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author sanid
+ * Swing form to add a new supplier (name + contact).
+ * Saves through AddSupplierBackend and returns to SupplierManagement.
  */
 public class Addsupplierr extends javax.swing.JFrame {
     
@@ -20,11 +20,12 @@ public class Addsupplierr extends javax.swing.JFrame {
     /**
      * Creates new form Addsupplierr
      */
+   /** Initializes UI and hooks up button actions. */
    public Addsupplierr() {
     initComponents();
     centerContentPanel();
 
-    // Your existing listeners
+    // Navigation + save actions.
     jButton1.addActionListener(e -> {
         new SupplierManagement().setVisible(true);
         dispose();
@@ -32,6 +33,7 @@ public class Addsupplierr extends javax.swing.JFrame {
     jButton2.addActionListener(e -> onSaveSupplier());
 }
 
+    /** Centers the form in a full-screen window. */
     private void centerContentPanel() {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
@@ -53,12 +55,17 @@ public class Addsupplierr extends javax.swing.JFrame {
         revalidate();
         repaint();
     }
+    /** Validates inputs and writes the supplier record. */
     private void onSaveSupplier() {
         String name = jTextField1.getText().trim();
         String contact = jTextField2.getText().trim();
 
         if (name.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Supplier name is required.");
+            return;
+        }
+        if (!FieldValidators.isValidPhone(contact)) {
+            JOptionPane.showMessageDialog(this, "Invalid contact number.");
             return;
         }
 

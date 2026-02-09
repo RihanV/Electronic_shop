@@ -12,17 +12,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Delivery management screen: list, search, add, and update delivery status.
  */
 public class DeliveryManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DeliveryManagement.class.getName());
     private final DeliveryBackend backend = new DeliveryBackend();
 
-    /**
-     * Creates new form DeliveryManagement
-     */
+    /** Creates the form, applies layout, and loads deliveries. */
     public DeliveryManagement() {
         initComponents();
         applyFullScreenLayout();
@@ -30,6 +27,7 @@ public class DeliveryManagement extends javax.swing.JFrame {
         loadDeliveries();
     }
 
+    /** Builds a full-screen layout using existing components. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -88,6 +86,7 @@ public class DeliveryManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Loads all deliveries into the table. */
     private void loadDeliveries() {
         try {
             List<Delivery> deliveries = backend.loadAll();
@@ -98,6 +97,7 @@ public class DeliveryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Searches deliveries by keyword and refreshes the table. */
     private void searchDeliveries() {
         String keyword = jTextFieldSearch.getText().trim();
         try {
@@ -109,6 +109,7 @@ public class DeliveryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Prompts for delivery details and saves a new delivery. */
     private void addDelivery() {
         String name = JOptionPane.showInputDialog(this, "Customer name:");
         if (name == null) return;
@@ -117,8 +118,14 @@ public class DeliveryManagement extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Customer name is required.");
             return;
         }
-        String phone = JOptionPane.showInputDialog(this, "Customer phone (optional):");
-        if (phone != null) phone = phone.trim();
+        String phone;
+        while (true) {
+            phone = JOptionPane.showInputDialog(this, "Customer phone (optional):");
+            if (phone == null) break;
+            phone = phone.trim();
+            if (FieldValidators.isValidPhone(phone)) break;
+            JOptionPane.showMessageDialog(this, "Invalid phone number.");
+        }
         String address = JOptionPane.showInputDialog(this, "Delivery address:");
         if (address == null) return;
         address = address.trim();
@@ -143,6 +150,7 @@ public class DeliveryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Updates the status for the selected delivery row. */
     private void updateStatus() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
@@ -173,6 +181,7 @@ public class DeliveryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Clears and fills the delivery table. */
     private void fillTable(List<Delivery> deliveries) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);

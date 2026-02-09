@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author DELL
+ * Billing (POS) screen: search products, add to cart, confirm sale,
+ * and optionally create a delivery.
  */
 public class Billing extends javax.swing.JFrame {
     
@@ -28,9 +28,7 @@ public class Billing extends javax.swing.JFrame {
     private final Map<Integer, Product> productCache = new HashMap<>();
     private final List<Integer> productIds = new ArrayList<>();
 
-    /**
-     * Creates new form Billing
-     */
+    /** Creates the form, sets defaults, and wires actions. */
     public Billing() {
     initComponents();
 
@@ -52,6 +50,7 @@ public class Billing extends javax.swing.JFrame {
     jComboBox1.addActionListener(e -> onProductSelected());
 }
 
+    /** Builds the full-screen layout for the billing panels. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -401,6 +400,7 @@ public class Billing extends javax.swing.JFrame {
         onAddToCart();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    /** Loads products into the combo box and caches product details. */
     private void loadProductOptions() {
         try {
             Map<Integer, String> options = backend.loadProductOptions();
@@ -423,6 +423,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Searches products by keyword and refreshes combo box. */
     private void onSearch() {
         String keyword = jTextField1.getText();
         try {
@@ -447,6 +448,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Clears search field and reloads the full product list. */
     private void onClear() {
         jTextField1.setText("");
         jTextField2.setText("");
@@ -455,6 +457,7 @@ public class Billing extends javax.swing.JFrame {
         loadProductOptions();
     }
 
+    /** Updates unit price/warranty options based on selected product. */
     private void onProductSelected() {
         int productId = getSelectedProductId();
         if (productId <= 0) {
@@ -477,6 +480,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Adds the selected product to the cart table. */
     private void onAddToCart() {
         int productId = getSelectedProductId();
         if (productId <= 0) {
@@ -541,6 +545,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Creates invoice items from the cart and confirms the sale. */
     private void onConfirmSale() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         if (model.getRowCount() == 0) {
@@ -574,6 +579,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Optional delivery creation dialog after a sale is confirmed. */
     private void maybeCreateDelivery(int invoiceId) {
         int choice = JOptionPane.showConfirmDialog(
             this,
@@ -618,10 +624,14 @@ public class Billing extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Address is required.");
                 continue;
             }
+            String phone = phoneField.getText().trim();
+            if (!FieldValidators.isValidPhone(phone)) {
+                JOptionPane.showMessageDialog(this, "Invalid phone number.");
+                continue;
+            }
 
             Delivery d = new Delivery();
             d.setCustomerName(name);
-            String phone = phoneField.getText().trim();
             d.setCustomerPhone(phone.isEmpty() ? null : phone);
             d.setAddress(address);
             d.setStatus(String.valueOf(statusBox.getSelectedItem()));
@@ -636,6 +646,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Removes selected cart row and recalculates total. */
     private void onRemoveSelected() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
@@ -647,12 +658,14 @@ public class Billing extends javax.swing.JFrame {
         updateGrandTotal();
     }
 
+    /** Returns the selected product ID from the combo box. */
     private int getSelectedProductId() {
         int idx = jComboBox1.getSelectedIndex();
         if (idx < 0 || idx >= productIds.size()) return -1;
         return productIds.get(idx);
     }
 
+    /** Finds a cart row by product and warranty to merge quantities. */
     private int findRowByProductId(DefaultTableModel model, int productId, int warrantyMonths) {
         for (int i = 0; i < model.getRowCount(); i++) {
             if (Integer.parseInt(model.getValueAt(i, 0).toString()) == productId
@@ -663,6 +676,7 @@ public class Billing extends javax.swing.JFrame {
         return -1;
     }
 
+    /** Applies warranty month options based on the product defaults. */
     private void applyWarrantyOptions(int productWarrantyMonths) {
         java.util.LinkedHashSet<Integer> options = new java.util.LinkedHashSet<>();
         options.add(0);
@@ -682,6 +696,7 @@ public class Billing extends javax.swing.JFrame {
         jComboBox2.setSelectedItem(String.valueOf(Math.max(productWarrantyMonths, 0)));
     }
 
+    /** Returns selected warranty months (safe parse). */
     private int getSelectedWarrantyMonths() {
         Object selected = jComboBox2.getSelectedItem();
         if (selected == null) return 0;
@@ -692,6 +707,7 @@ public class Billing extends javax.swing.JFrame {
         }
     }
 
+    /** Recalculates and displays the cart grand total. */
     private void updateGrandTotal() {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         double total = 0.0;

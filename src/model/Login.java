@@ -8,16 +8,14 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author User
+ * Login screen for the application.
+ * Validates credentials via LoginBackend then opens Dashboard.
  */
 public class Login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = Logger.getLogger(Login.class.getName());
 
-    /**
-     * Creates new form welcome
-     */
+    /** Creates the form and sets the split-pane layout. */
    public Login() {
     initComponents();
     this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -28,9 +26,10 @@ public class Login extends javax.swing.JFrame {
     });
 }
 
+  /** Reads username/password and attempts authentication. */
   private void onLogin() {
     String username = jTextField1.getText().trim();
-    String password = jTextField2.getText();
+    String password = new String(jTextField2.getPassword());
 
     if (username.isEmpty() || password.isEmpty()) {
       JOptionPane.showMessageDialog(this, "Please enter username and password.");
@@ -52,6 +51,7 @@ public class Login extends javax.swing.JFrame {
     }
   }
 
+  /** Action handler wrapper for the Login button. */
   private void onLogin(java.awt.event.ActionEvent evt) {
     onLogin();
   }
@@ -76,7 +76,7 @@ public class Login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -270,6 +270,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelRight;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

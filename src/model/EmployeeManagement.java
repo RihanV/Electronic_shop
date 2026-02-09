@@ -12,17 +12,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Employee management screen: list, search, add, update, delete, and attendance.
  */
 public class EmployeeManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(EmployeeManagement.class.getName());
     private final EmployeeBackend backend = new EmployeeBackend();
 
-    /**
-     * Creates new form EmployeeManagement
-     */
+    /** Creates the form, applies layout, and loads employee data. */
     public EmployeeManagement() {
         initComponents();
         applyFullScreenLayout();
@@ -30,6 +27,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         loadEmployees();
     }
 
+    /** Builds a full-screen layout using the existing Swing components. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -97,6 +95,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Loads active employees and refreshes the table. */
     private void loadEmployees() {
         try {
             List<Employee> employees = backend.loadActive();
@@ -107,6 +106,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Searches employees by keyword and refreshes the table. */
     private void searchEmployees() {
         String keyword = jTextFieldSearch.getText().trim();
         try {
@@ -118,6 +118,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Opens add dialog, validates input, and saves an employee. */
     private void addEmployee() {
         Employee e = promptEmployeeDetails("Add Employee", null);
         if (e == null) return;
@@ -131,6 +132,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Shared dialog for add/update employee details. */
     private Employee promptEmployeeDetails(String title, Employee seed) {
         javax.swing.JTextField nameField = new javax.swing.JTextField(20);
         javax.swing.JTextField roleField = new javax.swing.JTextField(20);
@@ -175,6 +177,14 @@ public class EmployeeManagement extends javax.swing.JFrame {
             String role = roleField.getText().trim();
             String phone = phoneField.getText().trim();
             String email = emailField.getText().trim();
+            if (!FieldValidators.isValidPhone(phone)) {
+                JOptionPane.showMessageDialog(this, "Invalid phone number.");
+                continue;
+            }
+            if (!FieldValidators.isValidEmail(email)) {
+                JOptionPane.showMessageDialog(this, "Invalid email address.");
+                continue;
+            }
             e.setRole(role.isEmpty() ? null : role);
             e.setPhone(phone.isEmpty() ? null : phone);
             e.setEmail(email.isEmpty() ? null : email);
@@ -182,6 +192,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Opens update dialog for selected employee and saves changes. */
     private void updateEmployee() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
@@ -212,6 +223,7 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Deactivates the selected employee. */
     private void deleteEmployee() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
@@ -230,11 +242,13 @@ public class EmployeeManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Navigates to attendance management. */
     private void markAttendance() {
         new AttendanceManagement().setVisible(true);
         dispose();
     }
 
+    /** Clears and fills the employee table. */
     private void fillTable(List<Employee> employees) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);

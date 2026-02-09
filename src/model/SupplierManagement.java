@@ -5,22 +5,20 @@
 package model;
 
 /**
- *
- * @author MSI
+ * Supplier entry screen: routes to Add Supplier or View Suppliers.
  */
 public class SupplierManagement extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SupplierManagement.class.getName());
 
-    /**
-     * Creates new form SupplierManagement
-     */
+    /** Creates the form and applies the full-screen layout. */
    public SupplierManagement() {
     initComponents();
     applyFullScreenLayout();
     setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 }
 
+    /** Builds the full-screen layout with title and action buttons. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -70,6 +68,7 @@ public class SupplierManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Sets consistent colors/sizes for the action buttons. */
     private void applyButtonStyles() {
         jButton1.setBackground(new java.awt.Color(102, 153, 255));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));

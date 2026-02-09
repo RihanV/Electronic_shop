@@ -6,7 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** DAO for delivery table CRUD operations. */
 public class DeliveryDAO {
+  /** Inserts a delivery record and returns generated id. */
   public int create(Delivery d) throws SQLException {
     String sql = "INSERT INTO deliveries(customer_name, customer_phone, address, invoice_id, status) VALUES (?,?,?,?,?)";
     try (Connection c = DB.getConnection();
@@ -23,6 +25,7 @@ public class DeliveryDAO {
     }
   }
 
+  /** Updates status for a delivery. */
   public boolean updateStatus(int id, String status) throws SQLException {
     String sql = "UPDATE deliveries SET status=? WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -32,6 +35,7 @@ public class DeliveryDAO {
     }
   }
 
+  /** Lists all deliveries ordered by newest first. */
   public List<Delivery> listAll() throws SQLException {
     String sql = "SELECT id, customer_name, customer_phone, address, invoice_id, status FROM deliveries ORDER BY id DESC";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -43,6 +47,7 @@ public class DeliveryDAO {
     }
   }
 
+  /** Searches deliveries by customer name/phone or status. */
   public List<Delivery> search(String keyword) throws SQLException {
     String sql = "SELECT id, customer_name, customer_phone, address, invoice_id, status FROM deliveries " +
         "WHERE customer_name LIKE ? OR customer_phone LIKE ? OR status LIKE ? ORDER BY id DESC";
@@ -59,6 +64,7 @@ public class DeliveryDAO {
     }
   }
 
+  /** Maps a result set row into a Delivery object. */
   private Delivery map(ResultSet rs) throws SQLException {
     Integer invoiceId = rs.getObject("invoice_id") == null ? null : rs.getInt("invoice_id");
     return new Delivery(

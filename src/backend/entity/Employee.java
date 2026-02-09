@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing an employee record. */
 public class Employee {
   private int id;
   private String name;

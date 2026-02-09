@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class InvoiceBackend {
 
+  /** Loads the grand total for a specific invoice. */
   public double loadGrandTotal(int invoiceId) throws SQLException {
     if (invoiceId <= 0) throw new IllegalArgumentException("Invalid invoice id");
     String sql = "SELECT grand_total FROM invoices WHERE invoice_id=?";
@@ -28,6 +29,7 @@ public class InvoiceBackend {
     }
   }
 
+  /** Loads invoice items (including warranty info if present). */
   public List<InvoiceItem> loadItems(int invoiceId) throws SQLException {
     if (invoiceId <= 0) throw new IllegalArgumentException("Invalid invoice id");
     String sql = "SELECT ii.product_id, ii.product_name, ii.quantity, ii.unit_price, ii.line_total, " +

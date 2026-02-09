@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing a warranty record. */
 public class WarrantyRecord {
   private int id;
   private int productId;

@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing a work shift. */
 public class Shift {
   private int id;
   private String name;

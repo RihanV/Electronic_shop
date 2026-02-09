@@ -12,17 +12,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Stock view screen: shows active products and supports search.
  */
 public class stock extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(stock.class.getName());
     private final StockBackend backend = new StockBackend();
 
-    /**
-     * Creates new form stock
-     */
+    /** Creates the form, wires actions, and loads stock list. */
    public stock() {
     initComponents();
 
@@ -39,6 +36,7 @@ public class stock extends javax.swing.JFrame {
     loadAll();
 }
 
+    /** Builds the full-screen layout for the stock table. */
     private void applyFullScreenLayout() {
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
@@ -274,6 +272,7 @@ public class stock extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    /** Loads all active products into the table. */
     private void loadAll() {
         try {
             List<Product> products = backend.loadAllProducts();
@@ -284,6 +283,7 @@ public class stock extends javax.swing.JFrame {
         }
     }
 
+    /** Searches by keyword and refreshes the table. */
     private void search() {
         String keyword = jTextField1.getText().trim();
         try {
@@ -295,6 +295,7 @@ public class stock extends javax.swing.JFrame {
         }
     }
 
+    /** Clears and fills the stock table. */
     private void fillTable(List<Product> products) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);

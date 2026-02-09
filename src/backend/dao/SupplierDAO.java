@@ -5,7 +5,9 @@ import backend.entity.Supplier;
 import java.sql.*;
 import java.util.*;
 
+/** DAO for supplier table CRUD operations. */
 public class SupplierDAO {
+  /** Inserts a new supplier and returns generated id. */
   public int create(Supplier s) throws SQLException {
     String sql = "INSERT INTO suppliers(name,phone,email,address,is_active) VALUES (?,?,?,?,1)";
     try (Connection c = DB.getConnection();
@@ -19,6 +21,7 @@ public class SupplierDAO {
     }
   }
 
+  /** Lists active suppliers. */
   public List<Supplier> listActive() throws SQLException {
     String sql = "SELECT id,name,phone,email,address,is_active FROM suppliers WHERE is_active=1 ORDER BY name";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -28,6 +31,7 @@ public class SupplierDAO {
     }
   }
 
+  /** Soft-deactivates a supplier by id. */
   public boolean deactivate(int supplierId) throws SQLException {
     String sql = "UPDATE suppliers SET is_active=0 WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -36,6 +40,7 @@ public class SupplierDAO {
     }
   }
 
+  /** Finds a supplier by exact name. */
   public Supplier findByName(String name) throws SQLException {
     String sql = "SELECT id,name,phone,email,address,is_active FROM suppliers WHERE name=? LIMIT 1";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -44,6 +49,7 @@ public class SupplierDAO {
     }
   }
 
+  /** Maps a result set row into a Supplier object. */
   private Supplier map(ResultSet rs) throws SQLException {
     return new Supplier(
       rs.getInt("id"),

@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class UpdateProductBackend {
 
+  /** Loads active product options (id -> name), with schema fallback. */
   public Map<Integer, String> loadProductOptions() throws SQLException {
     String sqlWithActive = "SELECT product_id, name FROM products WHERE is_active=1 ORDER BY name";
     String sqlSimple = "SELECT product_id, name FROM products ORDER BY name";
@@ -26,6 +27,7 @@ public class UpdateProductBackend {
     }
   }
 
+  /** Loads supplier options (id -> name), with schema fallback. */
   public Map<Integer, String> loadSupplierOptions() throws SQLException {
     String sqlWithActive = "SELECT supplier_id, supplier_name FROM suppliers WHERE is_active=1 ORDER BY supplier_name";
     String sqlSimple = "SELECT supplier_id, supplier_name FROM suppliers ORDER BY supplier_name";
@@ -38,6 +40,7 @@ public class UpdateProductBackend {
     }
   }
 
+  /** Loads active category names. */
   public List<String> loadCategoryOptions() throws SQLException {
     String sql = "SELECT name FROM categories WHERE is_active=1 ORDER BY name";
     try (Connection con = DB.getConnection()) {
@@ -45,6 +48,7 @@ public class UpdateProductBackend {
     }
   }
 
+  /** Loads a product by id, with schema fallback for is_active. */
   public Product loadProductById(int productId) throws SQLException {
     String sqlWithActive = "SELECT product_id, name, category, supplier_id, price, quantity, is_active FROM products WHERE product_id=?";
     String sqlSimple = "SELECT product_id, name, category, supplier_id, price, quantity FROM products WHERE product_id=?";
@@ -57,6 +61,7 @@ public class UpdateProductBackend {
     }
   }
 
+  /** Validates and updates a product record. */
   public boolean updateProduct(Product p) throws SQLException {
     if (p == null) throw new IllegalArgumentException("Product is null");
     if (p.getId() <= 0) throw new IllegalArgumentException("Invalid product id");
@@ -79,6 +84,7 @@ public class UpdateProductBackend {
     }
   }
 
+  /** Executes product options query. */
   private Map<Integer, String> loadProductOptions(Connection con, String sql) throws SQLException {
     Map<Integer, String> out = new LinkedHashMap<>();
     try (PreparedStatement ps = con.prepareStatement(sql);
@@ -90,6 +96,7 @@ public class UpdateProductBackend {
     return out;
   }
 
+  /** Executes supplier options query. */
   private Map<Integer, String> loadSupplierOptions(Connection con, String sql) throws SQLException {
     Map<Integer, String> out = new LinkedHashMap<>();
     try (PreparedStatement ps = con.prepareStatement(sql);
@@ -101,6 +108,7 @@ public class UpdateProductBackend {
     return out;
   }
 
+  /** Executes category options query. */
   private List<String> loadCategoryOptions(Connection con, String sql) throws SQLException {
     List<String> out = new ArrayList<>();
     try (PreparedStatement ps = con.prepareStatement(sql);
@@ -115,6 +123,7 @@ public class UpdateProductBackend {
     return out;
   }
 
+  /** Executes product-by-id query and maps to Product. */
   private Product loadProductById(Connection con, String sql, int productId, boolean hasIsActive) throws SQLException {
     try (PreparedStatement ps = con.prepareStatement(sql)) {
       ps.setInt(1, productId);

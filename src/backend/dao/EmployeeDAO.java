@@ -6,7 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** DAO for employee table CRUD operations. */
 public class EmployeeDAO {
+  /** Inserts a new employee and returns generated id. */
   public int create(Employee e) throws SQLException {
     String sql = "INSERT INTO employees(name, role, phone, email, is_active) VALUES (?,?,?,?,1)";
     try (Connection c = DB.getConnection();
@@ -22,6 +24,7 @@ public class EmployeeDAO {
     }
   }
 
+  /** Updates an employee record. */
   public boolean update(Employee e) throws SQLException {
     String sql = "UPDATE employees SET name=?, role=?, phone=?, email=? WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -34,6 +37,7 @@ public class EmployeeDAO {
     }
   }
 
+  /** Soft-deactivates an employee by id. */
   public boolean deactivate(int id) throws SQLException {
     String sql = "UPDATE employees SET is_active=0 WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -42,6 +46,7 @@ public class EmployeeDAO {
     }
   }
 
+  /** Lists active employees ordered by newest first. */
   public List<Employee> listActive() throws SQLException {
     String sql = "SELECT id,name,role,phone,email,is_active FROM employees WHERE is_active=1 ORDER BY id DESC";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -51,6 +56,7 @@ public class EmployeeDAO {
     }
   }
 
+  /** Searches employees by name, role, or phone. */
   public List<Employee> search(String keyword) throws SQLException {
     String sql = "SELECT id,name,role,phone,email,is_active FROM employees " +
         "WHERE name LIKE ? OR role LIKE ? OR phone LIKE ? ORDER BY id DESC";
@@ -67,6 +73,7 @@ public class EmployeeDAO {
     }
   }
 
+  /** Maps a result set row into an Employee object. */
   private Employee map(ResultSet rs) throws SQLException {
     return new Employee(
         rs.getInt("id"),

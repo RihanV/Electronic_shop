@@ -5,16 +5,13 @@
 package model;
 
 /**
- *
- * @author User
+ * Product management menu: add, update, or delete products.
  */
 public class ProductManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProductManagement.class.getName());
 
-    /**
-     * Creates new form ProductManagement
-     */
+    /** Creates the form and wires navigation buttons. */
     public ProductManagement() {
         initComponents();
         applyFullScreenLayout();
@@ -38,6 +35,7 @@ public class ProductManagement extends javax.swing.JFrame {
         });
     }
 
+    /** Builds the full-screen layout with action buttons. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -89,6 +87,7 @@ public class ProductManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Sets consistent button colors and sizes. */
     private void applyButtonStyles() {
         jButtonAdd.setBackground(new java.awt.Color(102, 153, 255));
         jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));

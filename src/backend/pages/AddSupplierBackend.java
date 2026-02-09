@@ -10,6 +10,7 @@ import java.sql.*;
  */
 public class AddSupplierBackend {
 
+  /** Validates and inserts a new supplier. */
   public int addSupplier(Supplier s) throws SQLException {
     if (s == null) throw new IllegalArgumentException("Supplier is null");
     if (s.getName() == null || s.getName().trim().isEmpty()) throw new IllegalArgumentException("Supplier name is required");

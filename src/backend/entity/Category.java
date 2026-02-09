@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing a category. */
 public class Category {
   private int id;
   private String name;

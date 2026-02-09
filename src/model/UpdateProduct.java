@@ -14,8 +14,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author MSI
+ * Swing form to update an existing product.
+ * Loads products into a combo box and lets the user edit fields.
  */
 public class UpdateProduct extends javax.swing.JFrame {
     
@@ -25,9 +25,7 @@ public class UpdateProduct extends javax.swing.JFrame {
     private Map<Integer, String> supplierOptions = new LinkedHashMap<>();
     private List<String> categoryOptions = new java.util.ArrayList<>();
 
-    /**
-     * Creates new form UpdateProduct
-     */
+    /** Creates the form, wires actions, and loads dropdown data. */
     public UpdateProduct() {
     initComponents();
     centerContentPanel();
@@ -47,6 +45,7 @@ public class UpdateProduct extends javax.swing.JFrame {
     loadProducts();
 }
 
+    /** Centers the content panel in the window. */
     private void centerContentPanel() {
         java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
         gbc.gridx = 0;
@@ -66,6 +65,7 @@ public class UpdateProduct extends javax.swing.JFrame {
         pack();
     }
 
+    /** Loads product names and refreshes selection. */
     private void loadProducts() {
         try {
             productOptions = backend.loadProductOptions();
@@ -90,6 +90,7 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Loads suppliers for the supplier combo box. */
     private void loadSuppliers() {
         try {
             supplierOptions = backend.loadSupplierOptions();
@@ -112,6 +113,7 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Loads categories for the category combo box. */
     private void loadCategories() {
         try {
             categoryOptions = backend.loadCategoryOptions();
@@ -131,18 +133,21 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Returns the selected product ID from the combo box. */
     private int getSelectedProductId() {
         int idx = jComboBox1.getSelectedIndex();
         if (idx < 0 || productOptions.isEmpty()) return -1;
         return productOptions.keySet().stream().skip(idx).findFirst().orElse(-1);
     }
 
+    /** Returns the selected supplier ID from the combo box. */
     private int getSelectedSupplierId() {
         int idx = jComboBox3.getSelectedIndex();
         if (idx < 0 || supplierOptions.isEmpty()) return -1;
         return supplierOptions.keySet().stream().skip(idx).findFirst().orElse(-1);
     }
 
+    /** Populates form fields when a product is selected. */
     private void onProductSelected() {
         int productId = getSelectedProductId();
         if (productId <= 0) {
@@ -171,6 +176,7 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Selects the supplier combo box item by supplier ID. */
     private void selectSupplierById(int supplierId) {
         if (supplierId <= 0 || supplierOptions.isEmpty()) return;
         int index = 0;
@@ -183,6 +189,7 @@ public class UpdateProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Validates fields and updates the product record. */
     private void onUpdateProduct() {
         int productId = getSelectedProductId();
         if (productId <= 0) {

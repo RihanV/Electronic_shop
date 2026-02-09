@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Attendance screen: mark attendance for a selected employee/shift
+ * and view past records for that employee.
  */
 public class AttendanceManagement extends javax.swing.JFrame {
 
@@ -29,9 +29,7 @@ public class AttendanceManagement extends javax.swing.JFrame {
     private final Map<Integer, String> employeeOptions = new LinkedHashMap<>();
     private final Map<Integer, String> shiftOptions = new LinkedHashMap<>();
 
-    /**
-     * Creates new form AttendanceManagement
-     */
+    /** Creates the form and loads employee/shift options. */
     public AttendanceManagement() {
         initComponents();
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -39,6 +37,7 @@ public class AttendanceManagement extends javax.swing.JFrame {
         loadShifts();
     }
 
+    /** Loads employee names into the employee combo box. */
     private void loadEmployees() {
         try {
             List<Employee> employees = employeeBackend.loadActive();
@@ -55,6 +54,7 @@ public class AttendanceManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Loads shift names into the shift combo box. */
     private void loadShifts() {
         try {
             List<Shift> shifts = backend.loadShifts();
@@ -71,18 +71,21 @@ public class AttendanceManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Returns the selected employee ID from the combo box. */
     private int getSelectedEmployeeId() {
         int idx = jComboBoxEmployee.getSelectedIndex();
         if (idx < 0 || employeeOptions.isEmpty()) return -1;
         return employeeOptions.keySet().stream().skip(idx).findFirst().orElse(-1);
     }
 
+    /** Returns the selected shift ID from the combo box. */
     private int getSelectedShiftId() {
         int idx = jComboBoxShift.getSelectedIndex();
         if (idx < 0 || shiftOptions.isEmpty()) return -1;
         return shiftOptions.keySet().stream().skip(idx).findFirst().orElse(-1);
     }
 
+    /** Validates input and inserts a new attendance record. */
     private void markAttendance() {
         int employeeId = getSelectedEmployeeId();
         int shiftId = getSelectedShiftId();
@@ -117,6 +120,7 @@ public class AttendanceManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Loads attendance records for the selected employee. */
     private void loadAttendanceForEmployee() {
         int employeeId = getSelectedEmployeeId();
         if (employeeId <= 0) return;

@@ -3,9 +3,13 @@ package backend.db;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Loads database connection properties with fallbacks.
+ */
 public final class DbConfig {
   private DbConfig() {}
 
+  /** Loads config from system property, file, or classpath (in that order). */
   public static Properties load() {
     Properties p = new Properties();
     p.setProperty("db.driver","com.mysql.cj.jdbc.Driver");

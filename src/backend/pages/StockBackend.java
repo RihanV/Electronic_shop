@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class StockBackend {
 
+  /** Loads all active products for stock view. */
   public List<Product> loadAllProducts() throws SQLException {
     String sql = "SELECT product_id, name, category, supplier_id, price, quantity, is_active FROM products WHERE is_active=1 ORDER BY product_id DESC";
     List<Product> out = new ArrayList<>();
@@ -33,6 +34,7 @@ public class StockBackend {
     return out;
   }
 
+  /** Searches active products by name or category. */
   public List<Product> searchProducts(String keyword) throws SQLException {
     if (keyword == null) keyword = "";
     keyword = keyword.trim();

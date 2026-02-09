@@ -1,5 +1,6 @@
 package backend.entity;
 
+/** Simple POJO representing an attendance record. */
 public class Attendance {
   private int id;
   private int employeeId;

@@ -22,8 +22,7 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Destination;
 
 /**
- *
- * @author rihanvinsika
+ * Invoice view: displays items for a specific invoice and allows printing to PDF.
  */
 public class Invoice extends javax.swing.JFrame {
     
@@ -31,9 +30,7 @@ public class Invoice extends javax.swing.JFrame {
     private final InvoiceBackend backend = new InvoiceBackend();
     private int invoiceId = -1;
 
-    /**
-     * Creates new form Invoice
-     */
+    /** Creates the form with an empty table and back button. */
     public Invoice() {
         initComponents();
         setLocationRelativeTo(null);
@@ -41,6 +38,7 @@ public class Invoice extends javax.swing.JFrame {
         ((DefaultTableModel) jTable1.getModel()).setRowCount(0);
     }
 
+    /** Creates the form and loads a specific invoice by id. */
     public Invoice(int invoiceId) {
         this();
         this.invoiceId = invoiceId;
@@ -141,10 +139,8 @@ public class Invoice extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -158,6 +154,7 @@ public class Invoice extends javax.swing.JFrame {
         onPrintToPdf();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /** Loads invoice items and grand total into the UI. */
     private void loadInvoice() {
         if (invoiceId <= 0) {
             JOptionPane.showMessageDialog(this, "Invalid invoice id.");
@@ -185,6 +182,7 @@ public class Invoice extends javax.swing.JFrame {
         }
     }
 
+    /** Prompts for a file location and prints the invoice to PDF. */
     private void onPrintToPdf() {
         if (invoiceId <= 0) {
             JOptionPane.showMessageDialog(this, "Invalid invoice id.");

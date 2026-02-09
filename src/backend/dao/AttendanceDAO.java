@@ -6,7 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** DAO for attendance table CRUD operations. */
 public class AttendanceDAO {
+  /** Inserts an attendance record and returns generated id. */
   public int markAttendance(Attendance a) throws SQLException {
     String sql = "INSERT INTO attendance(employee_id, shift_id, att_date, status, note) VALUES (?,?,?,?,?)";
     try (Connection c = DB.getConnection();
@@ -23,6 +25,7 @@ public class AttendanceDAO {
     }
   }
 
+  /** Returns attendance history for a specific employee. */
   public List<Attendance> listByEmployee(int employeeId) throws SQLException {
     String sql = "SELECT id, employee_id, shift_id, att_date, status, note FROM attendance WHERE employee_id=? ORDER BY att_date DESC";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {

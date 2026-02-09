@@ -12,8 +12,8 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author DELL
+ * Swing form to add a new product.
+ * Loads active categories/suppliers and posts to AddProductBackend.
  */
 public class AddProduct extends javax.swing.JFrame {
     
@@ -24,15 +24,14 @@ public class AddProduct extends javax.swing.JFrame {
     private boolean hasSuppliers = false;
     private boolean hasCategories = false;
 
-    /**
-     * Creates new form AddProduct
-     */
+    /** Creates the form, wires actions, and loads dropdown data. */
     public AddProduct() {
         initComponents();
 
         centerContentPanel();
         setLocationRelativeTo(null);
 
+    // Navigation + save actions.
     jButton1.addActionListener(e -> {
         new ProductManagement().setVisible(true);
         dispose();
@@ -43,6 +42,7 @@ public class AddProduct extends javax.swing.JFrame {
     loadSuppliers();
     }
 
+    /** Centers the content panel in the window. */
     private void centerContentPanel() {
         java.awt.GridBagConstraints gbc = new java.awt.GridBagConstraints();
         gbc.gridx = 0;
@@ -63,6 +63,7 @@ public class AddProduct extends javax.swing.JFrame {
         pack();
     }
 
+    /** Fetches suppliers and populates the supplier combo box. */
     private void loadSuppliers() {
         try {
             supplierOptions = backend.loadSupplierOptions();
@@ -86,6 +87,7 @@ public class AddProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Fetches categories and populates the category combo box. */
     private void loadCategories() {
         try {
             categoryOptions = backend.loadCategoryOptions();
@@ -109,10 +111,12 @@ public class AddProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Enables add button only when valid options are available. */
     private void updateAddEnabled() {
         jButton2.setEnabled(hasSuppliers && hasCategories);
     }
 
+    /** Validates fields, builds Product, and saves to DB. */
     private void onAddProduct() {
         String name = jTextField1.getText().trim();
         String category = String.valueOf(jComboBox1.getSelectedItem()).trim();
@@ -180,6 +184,7 @@ public class AddProduct extends javax.swing.JFrame {
         }
     }
 
+    /** Resolves supplier ID based on the selected supplier name. */
     private int getSelectedSupplierId() {
         if (supplierOptions == null || supplierOptions.isEmpty()) return -1;
         String selectedName = String.valueOf(jComboBox2.getSelectedItem());

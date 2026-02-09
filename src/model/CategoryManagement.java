@@ -12,17 +12,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author User
+ * Category management screen: list, search, add, rename, deactivate.
  */
 public class CategoryManagement extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CategoryManagement.class.getName());
     private final CategoryBackend backend = new CategoryBackend();
 
-    /**
-     * Creates new form CategoryManagement
-     */
+    /** Creates the form, applies layout, and loads categories. */
     public CategoryManagement() {
         initComponents();
         applyFullScreenLayout();
@@ -30,6 +27,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         loadCategories();
     }
 
+    /** Builds a full-screen layout using the existing Swing components. */
     private void applyFullScreenLayout() {
         getContentPane().removeAll();
         getContentPane().setLayout(new java.awt.BorderLayout());
@@ -93,6 +91,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         repaint();
     }
 
+    /** Loads active categories into the table. */
     private void loadCategories() {
         try {
             List<Category> categories = backend.loadActive();
@@ -103,6 +102,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Searches categories by keyword. */
     private void searchCategories() {
         String keyword = jTextFieldSearch.getText().trim();
         try {
@@ -114,6 +114,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Prompts for a name and adds a category. */
     private void addCategory() {
         String name = JOptionPane.showInputDialog(this, "Category name:");
         if (name == null) return;
@@ -131,6 +132,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Renames the selected category. */
     private void renameCategory() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
@@ -155,6 +157,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Deactivates the selected category. */
     private void deactivateCategory() {
         int row = jTable1.getSelectedRow();
         if (row < 0) {
@@ -173,6 +176,7 @@ public class CategoryManagement extends javax.swing.JFrame {
         }
     }
 
+    /** Clears and fills the category table. */
     private void fillTable(List<Category> categories) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);

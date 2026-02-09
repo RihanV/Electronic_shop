@@ -5,7 +5,9 @@ import backend.entity.Product;
 import java.sql.*;
 import java.util.*;
 
+/** DAO for product table CRUD operations. */
 public class ProductDAO {
+  /** Inserts a new product and returns generated id. */
   public int create(Product p) throws SQLException {
     String sql = "INSERT INTO products(name,category,supplier_id,price,quantity,is_active) VALUES (?,?,?,?,?,1)";
     try (Connection c = DB.getConnection();
@@ -22,6 +24,7 @@ public class ProductDAO {
     }
   }
 
+  /** Updates an existing product. */
   public boolean update(Product p) throws SQLException {
     String sql = "UPDATE products SET name=?, category=?, supplier_id=?, price=?, quantity=? WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -35,6 +38,7 @@ public class ProductDAO {
     }
   }
 
+  /** Soft-deactivates a product by id. */
   public boolean deactivate(int productId) throws SQLException {
     String sql = "UPDATE products SET is_active=0 WHERE id=?";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
@@ -43,6 +47,7 @@ public class ProductDAO {
     }
   }
 
+  /** Lists active products ordered by newest first. */
   public List<Product> listActive() throws SQLException {
     String sql = "SELECT id,name,category,supplier_id,price,quantity,is_active FROM products WHERE is_active=1 ORDER BY id DESC";
     try (Connection c = DB.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
@@ -52,6 +57,7 @@ public class ProductDAO {
     }
   }
 
+  /** Searches active products by id or name. */
   public List<Product> searchActive(String q) throws SQLException {
     String sql = "SELECT id,name,category,supplier_id,price,quantity,is_active FROM products WHERE is_active=1 AND (CAST(id AS CHAR) LIKE ? OR name LIKE ?) ORDER BY id DESC";
     String like = "%" + q + "%";
@@ -66,6 +72,7 @@ public class ProductDAO {
     }
   }
 
+  /** Maps a result set row into a Product object. */
   private Product map(ResultSet rs) throws SQLException {
     return new Product(
       rs.getInt("id"),
